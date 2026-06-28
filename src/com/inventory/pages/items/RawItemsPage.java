@@ -42,12 +42,12 @@ public class RawItemsPage extends Page {
     // Image mapping cache for original mockup ingredients
     private static final Map<String, String> IMAGE_URLS = new HashMap<>();
     static {
-        IMAGE_URLS.put("shea butter", "https://lh3.googleusercontent.com/aida-public/AB6AXuCHBRoYKc0SBAInofThMZBrgxb3UuDv6K95qV0D1viI6QHybia87hjg4rEQE1-BgiKpZbQko0CiTlCw_A6gzGFfB4L-zVO6mmNURRvMV3DaNC3wTLQhUG4HBrOJvBzcSjHZD4b1V9dc_RdSgsNRBldu7Ex2gEpTOMk6dT2L7YE-TLtdJDrEXF_9PJ2DqWdRLhopM3CU57mVopw6bWP105s6oh5pCEirmmRmsAps_7lw9FQVSWvBW3Kdcmqq8ScOZ-P7J-l1Gg7icn0t");
-        IMAGE_URLS.put("lavender", "https://lh3.googleusercontent.com/aida-public/AB6AXuAs-hZR63qnNR0cpgMedujl0AXcYB4iZX3cvXS2GtPbv2leWUVpUDFmnwKV-7VY1pQpBj8KLv73WX80qT1ewl1rmzwI7_8zUc53-bGHnvJ7TNgeXoTw-KU7yt6HOS22AWmlvPkeHm72Lhyk9NPu9mx4Or9pfTmR2UmJN5P8Au1MRJPZWzt1sYgFj4hE8chadoKOODcLySU9PB7mfF-DW24mmg39U9AoqVZvFOG6qsBXklj6T4npfA8qZjj90KltuJi4P8efFarbwX9b");
-        IMAGE_URLS.put("rosehip", "https://lh3.googleusercontent.com/aida-public/AB6AXuD5wkhJQP4AqhFADaZgNyUugQ6MQUy7rAYxEG0j-z5yUvyG8DwwxPQq33ZjkIOUchsalKUbth2UZ1gWxF5SlI5wANd8GPIDg-tzaJv9odrxKfGnS35-lLGnuT9Z-fNdKyEeDzvspRhhnt1DSHCeFSDtRe6Eg4n2m7ylusTBwPxom5Wqvql7GEwGpRCglWeD-BXghwEMXQa821Jx1-nX-vpPbfZW5NIXj3fEtatCVuRQXxKsBUOEvxsge6HDycjfsuWMSqR9n_vfG80O");
-        IMAGE_URLS.put("argan", "https://lh3.googleusercontent.com/aida-public/AB6AXuC4C357I8sYtX7Qb-AyNdClKIy0yEefjgk5_xVHD6OdtJSH19MYZGSGWQ-fmfEwMnS57Fs2TX-90GxEqSrW9jib3BE3gAFlDAOYCcuthZdcJoyH9zEZlp3S8E2dsZjzQX3xUb5NAWGxhlrGq2Ehm1At9gmOaKT0pvWSVwKDIKtMwu-qt5_p4e4ZoxqDiZYlUZGZtlwmPVOUglCZAStDT2W3-dO8KZSoztPsH8gU1rF26QiopzDadN-OQ4t6ZY57qUFcRan8H67Os5eD");
-        IMAGE_URLS.put("kelp", "https://lh3.googleusercontent.com/aida-public/AB6AXuBqzkFG1Qz30wB8eMX539RardS9h17zRfZY-BKz0UUoR5TkpXhAkLVg9CNWZXWyL5aos3_P73OHYt_WrIXj8WzrOO1AtK4VSgZuL5Yv5ZslWO1GISqKl99GTqtJ0AZlLROAtwO0rpLjxcLeHxQA45lRnZIlh1P1sU3_udyjTsFROY4mh-wdDMv1cibdDhHJe656RVpMBvw7UzvSnKTyQlKBIwQxhiVOG2gwZnT-czcx1rJ7lhaJCVmYHYzUrd5T0wWkBY4cmXj30E8E");
-        IMAGE_URLS.put("beeswax", "https://lh3.googleusercontent.com/aida-public/AB6AXuDks8tbSGxskWGYmmd0eIJHdh6_HZbGBgVVDax1ns93fZfSslpLqS4AOUkwmuFHSDcK2p_2mzdxQbyWO5kn_2tmTOAlRn0VpGdSOb-FBqgdkDVFvZ1B8a39DLfzxUZ1_Rx1OsJnDeh47tE8YNrws9qANYxmrxK2BFima-E0AnCvnRelSk0nCdiPryAOhmq-I66Y9OUxxRcOAiBGQnb8ilMxHAFuKQ1taALhAlWS4s-H_kl38FxFqFlPhlVBhR6MVHxGlF5jyYGDlfMA");
+        IMAGE_URLS.put("shea butter", "assets/images/shea_butter.jpg");
+        IMAGE_URLS.put("lavender", "assets/images/lavender.jpg");
+        IMAGE_URLS.put("rosehip", "assets/images/rosehip.jpg");
+        IMAGE_URLS.put("argan", "assets/images/argan.jpg");
+        IMAGE_URLS.put("kelp", "assets/images/kelp.jpg");
+        IMAGE_URLS.put("beeswax", "assets/images/beeswax.jpg");
     }
 
     private List<Item> rawItems;
@@ -61,7 +61,21 @@ public class RawItemsPage extends Page {
     private void initializeUI() {
         setBackground(Theme.CREAM_BASE);
         setLayout(new BorderLayout());
-        setBorder(new EmptyBorder(32, 32, 32, 32));
+        setBorder(null);
+
+        // Wrapper that tracks viewport width to prevent horizontal scrolling
+        JPanel scrollContent = new JPanel(new BorderLayout()) {
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension d = super.getPreferredSize();
+                if (getParent() instanceof JViewport) {
+                    d.width = getParent().getWidth();
+                }
+                return d;
+            }
+        };
+        scrollContent.setOpaque(false);
+        scrollContent.setBorder(new EmptyBorder(32, 32, 32, 32));
 
         // 1. Top Title Section
         JPanel headerPanel = new JPanel(new BorderLayout());
@@ -81,7 +95,7 @@ public class RawItemsPage extends Page {
         textPanel.setBorder(new EmptyBorder(8, 0, 0, 0));
 
         JLabel titleLabel = new JLabel("Raw items");
-        titleLabel.setFont(FontLoader.getMerriweather(28f, Font.BOLD));
+        titleLabel.setFont(FontLoader.getMerriweather(24f, Font.BOLD));
         titleLabel.setForeground(Theme.FOREST_DEEP);
 
         JLabel descLabel = new JLabel("Botanical ingredients and unprocessed inputs sourced globally for artisan skincare production.");
@@ -110,7 +124,7 @@ public class RawItemsPage extends Page {
         northPanel.add(headerPanel);
         northPanel.add(metricsPanel);
         northPanel.add(Box.createVerticalStrut(32));
-        add(northPanel, BorderLayout.NORTH);
+        scrollContent.add(northPanel, BorderLayout.NORTH);
 
         // 3. Main Content Panel (Grid vs Empty state Switcher)
         contentSwitcher = new CardLayout();
@@ -122,17 +136,20 @@ public class RawItemsPage extends Page {
         gridContainer.setOpaque(false);
         gridContainer.setLayout(new GridLayout(0, 3, 24, 24)); // Dynamically adjusted later
 
-        scrollPane = new JScrollPane(gridContainer);
-        scrollPane.setBorder(null);
-        scrollPane.getViewport().setBackground(Theme.CREAM_BASE);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
         // Empty State Panel
         emptyStatePanel = new EmptyStatePanel(e -> showAddItemDialog());
 
-        mainContentPanel.add(scrollPane, "GRID_VIEW");
+        mainContentPanel.add(gridContainer, "GRID_VIEW");
         mainContentPanel.add(emptyStatePanel, "EMPTY_VIEW");
-        add(mainContentPanel, BorderLayout.CENTER);
+        scrollContent.add(mainContentPanel, BorderLayout.CENTER);
+
+        scrollPane = new JScrollPane(scrollContent);
+        scrollPane.setBorder(null);
+        scrollPane.getViewport().setBackground(Theme.CREAM_BASE);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        add(scrollPane, BorderLayout.CENTER);
 
         // Dynamic grid resizing column count adjuster
         addComponentListener(new ComponentAdapter() {
@@ -156,7 +173,7 @@ public class RawItemsPage extends Page {
         titleLabel.setFont(FontLoader.getInterSemiBold(10f));
         titleLabel.setForeground(Theme.SLATE_MUTED);
 
-        valueLabel.setFont(FontLoader.getMerriweather(22f, Font.BOLD));
+        valueLabel.setFont(FontLoader.getMerriweather(30f, Font.BOLD));
         valueLabel.setForeground(valueColor);
 
         card.add(titleLabel, BorderLayout.NORTH);
