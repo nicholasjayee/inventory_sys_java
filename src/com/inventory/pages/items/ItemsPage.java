@@ -51,14 +51,25 @@ public class ItemsPage extends Page {
         setBackground(Theme.CREAM_BASE);
         setLayout(new BorderLayout());
 
+        JPanel scrollContent = new JPanel(new BorderLayout()) {
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension d = super.getPreferredSize();
+                if (getParent() instanceof JViewport) {
+                    d.width = getParent().getWidth();
+                }
+                return d;
+            }
+        };
+        scrollContent.setOpaque(false);
+
         // --- 1. Hero Banner Panel ---
         HeroBannerPanel heroPanel = new HeroBannerPanel();
-        add(heroPanel, BorderLayout.NORTH);
+        scrollContent.add(heroPanel, BorderLayout.NORTH);
 
         // --- 2. Main Body Container ---
-        JPanel bodyContainer = new JPanel();
+        JPanel bodyContainer = new JPanel(new BorderLayout());
         bodyContainer.setOpaque(false);
-        bodyContainer.setLayout(new BoxLayout(bodyContainer, BoxLayout.Y_AXIS));
         bodyContainer.setBorder(new EmptyBorder(24, 32, 32, 32));
 
         // Controls bar panel (Filters segment + Actions)
@@ -115,7 +126,7 @@ public class ItemsPage extends Page {
 
         controlsBar.add(tabsWrapper, BorderLayout.WEST);
         controlsBar.add(rightActions, BorderLayout.EAST);
-        bodyContainer.add(controlsBar);
+        bodyContainer.add(controlsBar, BorderLayout.NORTH);
 
         // --- 3. Inventory Table ---
         String[] columnNames = {"Name", "Category", "Quantity", "Price", "Status", "Actions"};
@@ -209,12 +220,22 @@ public class ItemsPage extends Page {
         itemsTable.getColumnModel().getColumn(5).setCellEditor(actionRendererEditor);
         itemsTable.getColumnModel().getColumn(5).setPreferredWidth(160);
 
-        JScrollPane scrollPane = new JScrollPane(itemsTable);
-        scrollPane.setBorder(BorderFactory.createLineBorder(Theme.BORDER_SUBTLE, 1));
-        scrollPane.getViewport().setBackground(Color.WHITE);
+        JPanel tableContainer = new JPanel(new BorderLayout());
+        tableContainer.setBackground(Color.WHITE);
+        tableContainer.setBorder(BorderFactory.createLineBorder(Theme.BORDER_SUBTLE, 1));
+        tableContainer.add(itemsTable.getTableHeader(), BorderLayout.NORTH);
+        tableContainer.add(itemsTable, BorderLayout.CENTER);
         
-        bodyContainer.add(scrollPane);
-        add(bodyContainer, BorderLayout.CENTER);
+        bodyContainer.add(tableContainer, BorderLayout.CENTER);
+        scrollContent.add(bodyContainer, BorderLayout.CENTER);
+
+        JScrollPane mainScrollPane = new JScrollPane(scrollContent);
+        mainScrollPane.setBorder(null);
+        mainScrollPane.getViewport().setBackground(Theme.CREAM_BASE);
+        mainScrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        mainScrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        add(mainScrollPane, BorderLayout.CENTER);
     }
 
     private JButton createTabButton(String text, String tabCode) {
