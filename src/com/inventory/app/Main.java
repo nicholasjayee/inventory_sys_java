@@ -10,7 +10,9 @@ import com.inventory.pages.dashboard.DashboardPage;
 import com.inventory.pages.items.ItemsPage;
 import com.inventory.pages.login.LoginPage;
 import com.inventory.router.Router;
-import java.awt.BorderLayout;
+import com.inventory.components.AppLayout;
+import com.inventory.components.TopNav;
+import java.awt.CardLayout;
 import java.awt.Dimension;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
@@ -39,37 +41,44 @@ public class Main {
             frame.setMinimumSize(new Dimension(1000, 650));
             frame.setLocationRelativeTo(null);
 
-            // Root panel layout wrapper
-            JPanel rootPanel = new JPanel(new BorderLayout());
+            // Root panel managed by CardLayout for swapping layout wrappers
+            CardLayout rootLayout = new CardLayout();
+            JPanel rootPanel = new JPanel(rootLayout);
             frame.add(rootPanel);
 
-            // Container panel managed by CardLayout routing
+            // Inner content panel managed by CardLayout router (the page outlet)
             JPanel contentContainer = new JPanel();
 
-            // Initialize Router
+            // Initialize Router on the inner content panel
             Router router = new Router(contentContainer);
 
-            // Initialize persistent Sidebar
+            // Initialize Layout components
             Sidebar sidebar = new Sidebar(router);
+            TopNav topNav = new TopNav(router);
 
-            // Assemble main layout
-            rootPanel.add(sidebar, BorderLayout.WEST);
-            rootPanel.add(contentContainer, BorderLayout.CENTER);
+            // Wrap them into AppLayout
+            AppLayout appLayout = new AppLayout(sidebar, topNav, contentContainer);
 
-            // Register routes (Pages)
-            router.register("/login", new LoginPage(router));
+            // Register main screen wrappers in root CardPanel
+            LoginPage loginPage = new LoginPage(router);
+            rootPanel.add(loginPage, "/login-screen");
+            rootPanel.add(appLayout, "/app-screen");
+
+            // Register routes (Pages) in Router
+            router.register("/login", loginPage);
             router.register("/dashboard", new DashboardPage(router));
             router.register("/items", new ItemsPage(router));
 
             // Register global Middleware chain (order matters)
             router.addGlobalMiddleware(new LoggingMiddleware());
             
-            // Layout layout middleware: hides sidebar on login, highlights sidebar nav items
+            // Layout toggler middleware: swaps screens and updates sidebar/top-nav
             router.addGlobalMiddleware((current, target, r) -> {
                 if ("/login".equals(target)) {
-                    sidebar.setVisible(false);
+                    rootLayout.show(rootPanel, "/login-screen");
                 } else {
-                    sidebar.setVisible(true);
+                    rootLayout.show(rootPanel, "/app-screen");
+                    topNav.setPageTitle(target);
                     sidebar.setActiveRoute(target);
                 }
                 return true;
