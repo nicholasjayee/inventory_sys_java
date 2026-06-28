@@ -4,12 +4,18 @@ import com.inventory.models.User;
 import com.inventory.router.Router;
 import com.inventory.state.AppState;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.geom.Ellipse2D;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import javax.swing.BorderFactory;
+import javax.swing.ImageIcon;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.border.EmptyBorder;
@@ -19,6 +25,9 @@ public class TopNav extends JPanel {
     private JLabel titleLabel;
     private JLabel userProfileLabel;
     private JLabel dateLabel;
+    private JPanel avatarPanel;
+
+    private static final String AVATAR_URL = "https://lh3.googleusercontent.com/aida-public/AB6AXuBepq3TakdiZCToUb9WGm50y_IVi73Hbvoc4rCYQxGtPE49nL6hlySKReoEc4NCT5qmKQ7syaktBBv9x48mC-O_1tVouNhOJlhobWc4xFF_6TuUIwy5y7jUDz619uAZogZKgN9ucbJxKS5brYwNx4jv0XrSyx2jTpoK9OH30NKs80SjrcaPgHjZ3HHlfe4m_9135rCZr3bJcUNB50UAyP2MsYDXugnizLH2zNgZmQuMrMnJYR-GSnp1QLR10OZDQkNIQN4zQUFQIGe1";
 
     public TopNav(Router router) {
         this.router = router;
@@ -35,7 +44,7 @@ public class TopNav extends JPanel {
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createCompoundBorder(
             getBorder(),
-            new EmptyBorder(12, 24, 12, 24)
+            new EmptyBorder(10, 24, 10, 24)
         ));
 
         // Left: Page Title / Breadcrumb
@@ -45,7 +54,7 @@ public class TopNav extends JPanel {
         add(titleLabel, BorderLayout.WEST);
 
         // Right: Date & User Profile Info
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 0));
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
         rightPanel.setOpaque(false);
 
         // Date Display
@@ -63,9 +72,42 @@ public class TopNav extends JPanel {
         userProfileLabel.setFont(FontLoader.getInterMedium(13f));
         userProfileLabel.setForeground(Theme.SLATE_TEXT);
 
+        // Round Avatar Image Panel loaded asynchronously
+        avatarPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                
+                int w = getWidth();
+                int h = getHeight();
+                
+                // Draw white background
+                g2.setColor(Color.WHITE);
+                g2.fill(new Ellipse2D.Double(0, 0, w - 1, h - 1));
+                
+                // Draw rounded image
+                ImageIcon icon = ImageLoader.getOrLoadImage("user_avatar", AVATAR_URL, this, w, h);
+                if (icon != null) {
+                    g2.setClip(new Ellipse2D.Double(0, 0, w, h));
+                    g2.drawImage(icon.getImage(), 0, 0, w, h, null);
+                }
+                
+                // Outline border
+                g2.setClip(null);
+                g2.setColor(Theme.BORDER_SUBTLE);
+                g2.draw(new Ellipse2D.Double(0, 0, w - 1, h - 1));
+                g2.dispose();
+            }
+        };
+        avatarPanel.setPreferredSize(new Dimension(32, 32));
+        avatarPanel.setOpaque(false);
+
         rightPanel.add(dateLabel);
         rightPanel.add(divider);
         rightPanel.add(userProfileLabel);
+        rightPanel.add(avatarPanel);
         add(rightPanel, BorderLayout.EAST);
     }
 
@@ -84,6 +126,7 @@ public class TopNav extends JPanel {
     private void updateProfile(User user) {
         if (user != null) {
             userProfileLabel.setText(user.getDisplayName() + " (" + user.getRole() + ")");
+            avatarPanel.repaint();
         } else {
             userProfileLabel.setText("Guest");
         }

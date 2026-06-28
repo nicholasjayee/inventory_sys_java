@@ -11,8 +11,8 @@ public class Sidebar extends JPanel {
     private final Router router;
     
     private JButton dashboardBtn;
-    private JButton itemsBtn;
-    private JButton rawItemsBtn;
+    private JButton rawMaterialsBtn;
+    private JButton processedGoodsBtn;
     private JLabel userLabel;
     private JLabel roleLabel;
 
@@ -30,19 +30,19 @@ public class Sidebar extends JPanel {
         setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Theme.BORDER_SUBTLE));
         setLayout(new BorderLayout());
 
-        // Top Brand Logo Section
+        // Top Brand Logo Section (Matches mockup exactly)
         JPanel brandPanel = new JPanel();
         brandPanel.setOpaque(false);
         brandPanel.setLayout(new BoxLayout(brandPanel, BoxLayout.Y_AXIS));
         brandPanel.setBorder(new EmptyBorder(32, 24, 32, 24));
 
-        JLabel brandLabel = new JLabel("Aramweer");
-        brandLabel.setFont(FontLoader.getMerriweather(24f, Font.BOLD));
+        JLabel brandLabel = new JLabel("Inventory");
+        brandLabel.setFont(FontLoader.getMerriweather(20f, Font.BOLD));
         brandLabel.setForeground(Theme.FOREST_DEEP);
         brandLabel.setAlignmentX(LEFT_ALIGNMENT);
 
-        JLabel subBrandLabel = new JLabel("BOTANICAL LOGISTICS");
-        subBrandLabel.setFont(FontLoader.getInterSemiBold(9f));
+        JLabel subBrandLabel = new JLabel("MANAGEMENT SUITE");
+        subBrandLabel.setFont(FontLoader.getInterSemiBold(10f));
         subBrandLabel.setForeground(Theme.SLATE_MUTED);
         subBrandLabel.setAlignmentX(LEFT_ALIGNMENT);
 
@@ -55,22 +55,22 @@ public class Sidebar extends JPanel {
         JPanel navPanel = new JPanel();
         navPanel.setOpaque(false);
         navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.Y_AXIS));
-        navPanel.setBorder(new EmptyBorder(0, 16, 0, 16));
+        navPanel.setBorder(new EmptyBorder(0, 0, 0, 0)); // Padding moved inside buttons
 
         dashboardBtn = createNavButton("Dashboard");
         dashboardBtn.addActionListener(e -> router.navigate("/dashboard"));
 
-        itemsBtn = createNavButton("Items Library");
-        itemsBtn.addActionListener(e -> router.navigate("/items"));
+        rawMaterialsBtn = createNavButton("Raw Materials");
+        rawMaterialsBtn.addActionListener(e -> router.navigate("/raw-items"));
 
-        rawItemsBtn = createNavButton("Raw Items");
-        rawItemsBtn.addActionListener(e -> router.navigate("/raw-items"));
+        processedGoodsBtn = createNavButton("Processed Goods");
+        processedGoodsBtn.addActionListener(e -> router.navigate("/items"));
 
         navPanel.add(dashboardBtn);
-        navPanel.add(Box.createVerticalStrut(8));
-        navPanel.add(itemsBtn);
-        navPanel.add(Box.createVerticalStrut(8));
-        navPanel.add(rawItemsBtn);
+        navPanel.add(Box.createVerticalStrut(4));
+        navPanel.add(rawMaterialsBtn);
+        navPanel.add(Box.createVerticalStrut(4));
+        navPanel.add(processedGoodsBtn);
         add(navPanel, BorderLayout.CENTER);
 
         // Bottom User Session Section
@@ -111,40 +111,31 @@ public class Sidebar extends JPanel {
 
     private JButton createNavButton(String text) {
         JButton button = new JButton(text);
-        button.setFont(FontLoader.getInterMedium(13f));
-        button.setForeground(Theme.SLATE_TEXT);
+        button.setFont(FontLoader.getInterMedium(14f));
+        button.setForeground(Theme.SLATE_MUTED);
         button.setBackground(Theme.CREAM_SURFACE);
         button.setFocusPainted(false);
         button.setOpaque(true);
         button.setContentAreaFilled(true);
-        button.setBorder(BorderFactory.createCompoundBorder(
-            new Theme.RoundedBorder(4, Theme.CREAM_SURFACE, 1),
-            new EmptyBorder(10, 16, 10, 16)
-        ));
-        button.setMaximumSize(new Dimension(248, 40));
-        button.setPreferredSize(new Dimension(248, 40));
+        button.setBorder(BorderFactory.createEmptyBorder(12, 24, 12, 24));
+        button.setMaximumSize(new Dimension(280, 44));
+        button.setPreferredSize(new Dimension(280, 44));
         button.setAlignmentX(LEFT_ALIGNMENT);
         button.setHorizontalAlignment(SwingConstants.LEFT);
         
         button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                if (button.getBackground() != Theme.FOREST_DEEP) {
+                if (button.getForeground() != Theme.FOREST_DEEP) {
                     button.setBackground(Theme.CREAM_BASE);
-                    button.setBorder(BorderFactory.createCompoundBorder(
-                        new Theme.RoundedBorder(4, Theme.BORDER_SUBTLE, 1),
-                        new EmptyBorder(10, 16, 10, 16)
-                    ));
+                    button.setForeground(Theme.FOREST_LEAF);
                 }
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                if (button.getBackground() != Theme.FOREST_DEEP) {
+                if (button.getForeground() != Theme.FOREST_DEEP) {
                     button.setBackground(Theme.CREAM_SURFACE);
-                    button.setBorder(BorderFactory.createCompoundBorder(
-                        new Theme.RoundedBorder(4, Theme.CREAM_SURFACE, 1),
-                        new EmptyBorder(10, 16, 10, 16)
-                    ));
+                    button.setForeground(Theme.SLATE_MUTED);
                 }
             }
         });
@@ -155,33 +146,33 @@ public class Sidebar extends JPanel {
     public void setActiveRoute(String path) {
         // Reset styles
         resetButtonTheme(dashboardBtn);
-        resetButtonTheme(itemsBtn);
-        resetButtonTheme(rawItemsBtn);
+        resetButtonTheme(rawMaterialsBtn);
+        resetButtonTheme(processedGoodsBtn);
 
         if ("/dashboard".equals(path)) {
             highlightButton(dashboardBtn);
-        } else if ("/items".equals(path)) {
-            highlightButton(itemsBtn);
         } else if ("/raw-items".equals(path)) {
-            highlightButton(rawItemsBtn);
+            highlightButton(rawMaterialsBtn);
+        } else if ("/items".equals(path)) {
+            highlightButton(processedGoodsBtn);
         }
     }
 
     private void resetButtonTheme(JButton button) {
         button.setBackground(Theme.CREAM_SURFACE);
-        button.setForeground(Theme.SLATE_TEXT);
-        button.setBorder(BorderFactory.createCompoundBorder(
-            new Theme.RoundedBorder(4, Theme.CREAM_SURFACE, 1),
-            new EmptyBorder(10, 16, 10, 16)
-        ));
+        button.setForeground(Theme.SLATE_MUTED);
+        button.setFont(FontLoader.getInterMedium(14f));
+        button.setBorder(BorderFactory.createEmptyBorder(12, 24, 12, 24));
     }
 
     private void highlightButton(JButton button) {
-        button.setBackground(Theme.FOREST_DEEP);
-        button.setForeground(Color.WHITE);
+        button.setBackground(Theme.CREAM_BASE);
+        button.setForeground(Theme.FOREST_DEEP);
+        button.setFont(FontLoader.getInter(14f, Font.BOLD));
+        // Draw 4px thick green border indicator on the right of the active button, matching Tailwind border-r-4
         button.setBorder(BorderFactory.createCompoundBorder(
-            new Theme.RoundedBorder(4, Theme.FOREST_DEEP, 1),
-            new EmptyBorder(10, 16, 10, 16)
+            BorderFactory.createMatteBorder(0, 0, 0, 4, Theme.FOREST_DEEP),
+            new EmptyBorder(12, 24, 12, 20)
         ));
     }
 

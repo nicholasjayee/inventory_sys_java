@@ -3,48 +3,61 @@ package com.inventory.pages.dashboard;
 import com.inventory.components.CardPanel;
 import com.inventory.components.EmptyStatePanel;
 import com.inventory.components.FontLoader;
+import com.inventory.components.ImageLoader;
 import com.inventory.components.ItemDialog;
 import com.inventory.components.SkeletonCard;
 import com.inventory.components.SkeletonTable;
 import com.inventory.components.Theme;
 import com.inventory.models.Item;
-import com.inventory.models.User;
 import com.inventory.router.Page;
 import com.inventory.router.Router;
 import com.inventory.services.ItemService;
-import com.inventory.state.AppState;
 import java.awt.*;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
+import java.awt.geom.Path2D;
 import java.text.NumberFormat;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
-import javax.swing.table.DefaultTableCellRenderer;
-import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
 
 public class DashboardPage extends Page {
     private final Router router;
     private final ItemService itemService;
 
-    // Persistent Header Components
-    private JLabel welcomeLabel;
-
-    // State Container (CardLayout)
-    private CardLayout stateLayout;
-    private JPanel stateCardPanel;
-
-    // LOADED State UI Components
+    // Header Metrics
     private JLabel totalUnitsVal;
-    private JLabel totalValVal;
-    private JLabel uniqueTypesVal;
-    private JLabel lowStockVal;
-    private DefaultTableModel recentItemsModel;
-    private JTable recentTable;
+    private JLabel totalValueVal;
 
-    // Skeletons references to pause/start timers
-    private SkeletonTable skeletonTable;
-    private SkeletonCard skeletonCard1, skeletonCard2, skeletonCard3, skeletonCard4;
+    // Stats Bar Metrics
+    private JLabel rawStockVal;
+    private JLabel processedGoodsVal;
+    private JLabel lowStockAlertsVal;
+
+    // Cards Grid layout
+    private JPanel gridContainer;
+    private JScrollPane scrollPane;
+    private CardLayout contentSwitcher;
+    private JPanel mainContentPanel;
+    private EmptyStatePanel emptyStatePanel;
+
+    // Image mapping cache for products
+    private static final Map<String, String> IMAGE_URLS = new HashMap<>();
+    static {
+        IMAGE_URLS.put("shea butter", "https://lh3.googleusercontent.com/aida-public/AB6AXuCHBRoYKc0SBAInofThMZBrgxb3UuDv6K95qV0D1viI6QHybia87hjg4rEQE1-BgiKpZbQko0CiTlCw_A6gzGFfB4L-zVO6mmNURRvMV3DaNC3wTLQhUG4HBrOJvBzcSjHZD4b1V9dc_RdSgsNRBldu7Ex2gEpTOMk6dT2L7YE-TLtdJDrEXF_9PJ2DqWdRLhopM3CU57mVopw6bWP105s6oh5pCEirmmRmsAps_7lw9FQVSWvBW3Kdcmqq8ScOZ-P7J-l1Gg7icn0t");
+        IMAGE_URLS.put("lavender", "https://lh3.googleusercontent.com/aida-public/AB6AXuAs-hZR63qnNR0cpgMedujl0AXcYB4iZX3cvXS2GtPbv2leWUVpUDFmnwKV-7VY1pQpBj8KLv73WX80qT1ewl1rmzwI7_8zUc53-bGHnvJ7TNgeXoTw-KU7yt6HOS22AWmlvPkeHm72Lhyk9NPu9mx4Or9pfTmR2UmJN5P8Au1MRJPZWzt1sYgFj4hE8chadoKOODcLySU9PB7mfF-DW24mmg39U9AoqVZvFOG6qsBXklj6T4npfA8qZjj90KltuJi4P8efFarbwX9b");
+        IMAGE_URLS.put("rosehip", "https://lh3.googleusercontent.com/aida-public/AB6AXuD5wkhJQP4AqhFADaZgNyUugQ6MQUy7rAYxEG0j-z5yUvyG8DwwxPQq33ZjkIOUchsalKUbth2UZ1gWxF5SlI5wANd8GPIDg-tzaJv9odrxKfGnS35-lLGnuT9Z-fNdKyEeDzvspRhhnt1DSHCeFSDtRe6Eg4n2m7ylusTBwPxom5Wqvql7GEwGpRCglWeD-BXghwEMXQa821Jx1-nX-vpPbfZW5NIXj3fEtatCVuRQXxKsBUOEvxsge6HDycjfsuWMSqR9n_vfG80O");
+        IMAGE_URLS.put("argan", "https://lh3.googleusercontent.com/aida-public/AB6AXuC4C357I8sYtX7Qb-AyNdClKIy0yEefjgk5_xVHD6OdtJSH19MYZGSGWQ-fmfEwMnS57Fs2TX-90GxEqSrW9jib3BE3gAFlDAOYCcuthZdcJoyH9zEZlp3S8E2dsZjzQX3xUb5NAWGxhlrGq2Ehm1At9gmOaKT0pvWSVwKDIKtMwu-qt5_p4e4ZoxqDiZYlUZGZtlwmPVOUglCZAStDT2W3-dO8KZSoztPsH8gU1rF26QiopzDadN-OQ4t6ZY57qUFcRan8H67Os5eD");
+        IMAGE_URLS.put("kelp", "https://lh3.googleusercontent.com/aida-public/AB6AXuBqzkFG1Qz30wB8eMX539RardS9h17zRfZY-BKz0UUoR5TkpXhAkLVg9CNWZXWyL5aos3_P73OHYt_WrIXj8WzrOO1AtK4VSgZuL5Yv5ZslWO1GISqKl99GTqtJ0AZlLROAtwO0rpLjxcLeHxQA45lRnZIlh1P1sU3_udyjTsFROY4mh-wdDMv1cibdDhHJe656RVpMBvw7UzvSnKTyQlKBIwQxhiVOG2gwZnT-czcx1rJ7lhaJCVmYHYzUrd5T0wWkBY4cmXj30E8E");
+        IMAGE_URLS.put("beeswax", "https://lh3.googleusercontent.com/aida-public/AB6AXuDks8tbSGxskWGYmmd0eIJHdh6_HZbGBgVVDax1ns93fZfSslpLqS4AOUkwmuFHSDcK2p_2mzdxQbyWO5kn_2tmTOAlRn0VpGdSOb-FBqgdkDVFvZ1B8a39DLfzxUZ1_Rx1OsJnDeh47tE8YNrws9qANYxmrxK2BFima-E0AnCvnRelSk0nCdiPryAOhmq-I66Y9OUxxRcOAiBGQnb8ilMxHAFuKQ1taALhAlWS4s-H_kl38FxFqFlPhlVBhR6MVHxGlF5jyYGDlfMA");
+        IMAGE_URLS.put("serum", "https://lh3.googleusercontent.com/aida-public/AB6AXuAsbOwKjbPU6hRJ-FDfvcQAtCRN25zeueRafHO7MyFvwRhGHdOrUZDLFHZjdVUZLkYQnlBdXcgK6C78r1ObSk-pfL3RVBJETLThmq89mHGFnCIKILHK0mgn673mDAZaz-JQ6TKGOthdkjMjF78lpNxXhsU_AiDsjI6YaoNaOhOpikPVfGiEGrTbG0_oXUfxco7UcnII87oni53ObJ_-iWMvA94lEym32SlM_ztuHxm2dJkLtY-10k9BRNf-dmgWHo7mPRl1JOHtu3RQ");
+        IMAGE_URLS.put("cream", "https://lh3.googleusercontent.com/aida-public/AB6AXuAH2W0HmgKCdcgjZ3TBguiGy2QJThteqAZ5bMWToTC-BkKMjC7cepybTWUR2MHStw0A2Q3MIAWM8OJ5oWybKDcegL38zj4T19_-RK2BDxFBjTRSso60_31xqElN-Ovc_g_gPP6f3drS3LBRko2ef5zVTBPyPpMS8qTLbU9Lkj2zwFUi02HrsBKTWmR1WzLy3udgqw-HVixlf6YZYWUIpISK7l3WStni1es4hfw8k244GuumvgRoaf-ipN2glkm98576XD_pwPmPTd09");
+    }
+
+    private List<Item> loadedItems;
 
     public DashboardPage(Router router) {
         this.router = router;
@@ -57,267 +70,223 @@ public class DashboardPage extends Page {
         setLayout(new BorderLayout());
         setBorder(new EmptyBorder(32, 32, 32, 32));
 
-        // 1. Persistent Top Header Panel
-        JPanel headerPanel = new JPanel(new BorderLayout());
+        // 1. Header Section (Title + Total Info Stats + New Item CTA button)
+        JPanel headerPanel = new JPanel(new BorderLayout(24, 0));
         headerPanel.setOpaque(false);
-        headerPanel.setBorder(new EmptyBorder(0, 0, 16, 0));
+        headerPanel.setBorder(new EmptyBorder(0, 0, 24, 0));
 
-        JLabel titleLabel = new JLabel("Botanical Logistics");
+        // Left Header Titles
+        JPanel titlePanel = new JPanel();
+        titlePanel.setOpaque(false);
+        titlePanel.setLayout(new BoxLayout(titlePanel, BoxLayout.Y_AXIS));
+
+        JLabel titleLabel = new JLabel("Inventory Dashboard");
         titleLabel.setFont(FontLoader.getMerriweather(28f, Font.BOLD));
         titleLabel.setForeground(Theme.FOREST_DEEP);
 
-        welcomeLabel = new JLabel("Welcome back");
-        welcomeLabel.setFont(FontLoader.getInter(14f, Font.PLAIN));
-        welcomeLabel.setForeground(Theme.SLATE_MUTED);
+        JLabel subtitleLabel = new JLabel("Overview of raw materials and processed goods.");
+        subtitleLabel.setFont(FontLoader.getInter(14f, Font.PLAIN));
+        subtitleLabel.setForeground(Theme.SLATE_MUTED);
 
-        headerPanel.add(titleLabel, BorderLayout.NORTH);
-        headerPanel.add(welcomeLabel, BorderLayout.SOUTH);
-        add(headerPanel, BorderLayout.NORTH);
+        titlePanel.add(titleLabel);
+        titlePanel.add(Box.createVerticalStrut(4));
+        titlePanel.add(subtitleLabel);
+        headerPanel.add(titlePanel, BorderLayout.WEST);
 
-        // 2. State-Based Panel Swapper
-        stateLayout = new CardLayout();
-        stateCardPanel = new JPanel(stateLayout);
-        stateCardPanel.setOpaque(false);
+        // Right Header Stats Grid & Button
+        JPanel rightActions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 24, 0));
+        rightActions.setOpaque(false);
 
-        // Define layouts for states
-        setupLoadingStatePanel();
-        setupLoadedStatePanel();
-        setupEmptyStatePanel();
-        setupErrorStatePanel();
+        JPanel headerStats = new JPanel(new GridLayout(1, 2, 24, 0));
+        headerStats.setOpaque(false);
 
-        add(stateCardPanel, BorderLayout.CENTER);
-    }
+        // Total SKU Stat
+        JPanel unitsPanel = new JPanel();
+        unitsPanel.setOpaque(false);
+        unitsPanel.setLayout(new BoxLayout(unitsPanel, BoxLayout.Y_AXIS));
+        JLabel unitsTitle = new JLabel("TOTAL SKU");
+        unitsTitle.setFont(FontLoader.getInterSemiBold(9f));
+        unitsTitle.setForeground(Theme.SLATE_MUTED);
+        totalUnitsVal = new JLabel("0 units");
+        totalUnitsVal.setFont(FontLoader.getMerriweather(16f, Font.BOLD));
+        totalUnitsVal.setForeground(Theme.FOREST_DEEP);
+        unitsPanel.add(unitsTitle);
+        unitsPanel.add(Box.createVerticalStrut(2));
+        unitsPanel.add(totalUnitsVal);
 
-    // --- Loading State Setup ---
-    private void setupLoadingStatePanel() {
-        JPanel loadingPanel = new JPanel();
-        loadingPanel.setOpaque(false);
-        loadingPanel.setLayout(new BoxLayout(loadingPanel, BoxLayout.Y_AXIS));
+        // Total Value Stat
+        JPanel valuePanel = new JPanel();
+        valuePanel.setOpaque(false);
+        valuePanel.setLayout(new BoxLayout(valuePanel, BoxLayout.Y_AXIS));
+        JLabel valueTitle = new JLabel("TOTAL VALUE");
+        valueTitle.setFont(FontLoader.getInterSemiBold(9f));
+        valueTitle.setForeground(Theme.SLATE_MUTED);
+        totalValueVal = new JLabel("$0.00");
+        totalValueVal.setFont(FontLoader.getMerriweather(16f, Font.BOLD));
+        totalValueVal.setForeground(Theme.FOREST_DEEP);
+        valuePanel.add(valueTitle);
+        valuePanel.add(Box.createVerticalStrut(2));
+        valuePanel.add(totalValueVal);
 
-        // KPI Skeletons
-        JPanel kpiSkeletonGrid = new JPanel(new GridLayout(1, 4, 16, 0));
-        kpiSkeletonGrid.setOpaque(false);
-        kpiSkeletonGrid.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
-        kpiSkeletonGrid.setPreferredSize(new Dimension(800, 120));
+        // Border divider line inside header
+        unitsPanel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createMatteBorder(0, 0, 0, 1, Theme.BORDER_SUBTLE),
+            new EmptyBorder(0, 0, 0, 16)
+        ));
 
-        skeletonCard1 = new SkeletonCard();
-        skeletonCard2 = new SkeletonCard();
-        skeletonCard3 = new SkeletonCard();
-        skeletonCard4 = new SkeletonCard();
+        headerStats.add(unitsPanel);
+        headerStats.add(valuePanel);
 
-        kpiSkeletonGrid.add(skeletonCard1);
-        kpiSkeletonGrid.add(skeletonCard2);
-        kpiSkeletonGrid.add(skeletonCard3);
-        kpiSkeletonGrid.add(skeletonCard4);
+        JButton createBtn = new JButton("+ Create New Item");
+        Theme.stylePrimaryButton(createBtn);
+        createBtn.setPreferredSize(new Dimension(160, 38));
+        createBtn.addActionListener(e -> showAddItemDialog());
 
-        // Table Skeleton Section
-        JPanel tableSkeletonPanel = new JPanel(new BorderLayout());
-        tableSkeletonPanel.setOpaque(false);
-        
-        JLabel sectionTitle = new JLabel("Loading inventory records...");
-        sectionTitle.setFont(FontLoader.getMerriweather(18f, Font.BOLD));
-        sectionTitle.setForeground(Theme.FOREST_DEEP);
-        sectionTitle.setBorder(new EmptyBorder(0, 0, 12, 0));
-        tableSkeletonPanel.add(sectionTitle, BorderLayout.NORTH);
+        rightActions.add(headerStats);
+        rightActions.add(createBtn);
+        headerPanel.add(rightActions, BorderLayout.EAST);
 
-        skeletonTable = new SkeletonTable();
-        tableSkeletonPanel.add(skeletonTable, BorderLayout.CENTER);
+        // 2. Stats Bar Section (3 Columns Grid)
+        JPanel statsBar = new JPanel(new GridLayout(1, 3, 24, 0));
+        statsBar.setOpaque(false);
+        statsBar.setPreferredSize(new Dimension(800, 90));
+        statsBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
 
-        loadingPanel.add(Box.createVerticalStrut(16));
-        loadingPanel.add(kpiSkeletonGrid);
-        loadingPanel.add(Box.createVerticalStrut(32));
-        loadingPanel.add(tableSkeletonPanel);
+        statsBar.add(createStatsCard("RAW STOCK", rawStockVal = new JLabel("0 units"), "package"));
+        statsBar.add(createStatsCard("PROCESSED GOODS", processedGoodsVal = new JLabel("0 units"), "science"));
+        statsBar.add(createStatsCard("LOW STOCK ALERTS", lowStockAlertsVal = new JLabel("0 items"), "warning", Theme.ERROR_FG));
 
-        stateCardPanel.add(loadingPanel, "LOADING");
-    }
+        // Group Header & Stats Bar vertically
+        JPanel northPanel = new JPanel();
+        northPanel.setOpaque(false);
+        northPanel.setLayout(new BoxLayout(northPanel, BoxLayout.Y_AXIS));
+        northPanel.add(headerPanel);
+        northPanel.add(statsBar);
+        northPanel.add(Box.createVerticalStrut(32));
+        add(northPanel, BorderLayout.NORTH);
 
-    // --- Loaded State Setup ---
-    private void setupLoadedStatePanel() {
-        JPanel loadedPanel = new JPanel();
-        loadedPanel.setOpaque(false);
-        loadedPanel.setLayout(new BoxLayout(loadedPanel, BoxLayout.Y_AXIS));
+        // 3. Grid Content Container (Empty vs Populated Bento list layout)
+        contentSwitcher = new CardLayout();
+        mainContentPanel = new JPanel(contentSwitcher);
+        mainContentPanel.setOpaque(false);
 
-        // Real KPI Grid
-        JPanel kpiPanel = new JPanel(new GridLayout(1, 4, 16, 0));
-        kpiPanel.setOpaque(false);
-        kpiPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 120));
-        kpiPanel.setPreferredSize(new Dimension(800, 120));
+        gridContainer = new JPanel();
+        gridContainer.setOpaque(false);
+        gridContainer.setLayout(new GridLayout(0, 3, 24, 24)); // Auto cols calculated on resize
 
-        kpiPanel.add(createKPICard("TOTAL UNITS", totalUnitsVal = new JLabel("0 units")));
-        kpiPanel.add(createKPICard("TOTAL VALUE (USD)", totalValVal = new JLabel("$0.00")));
-        kpiPanel.add(createKPICard("UNIQUE PRODUCTS", uniqueTypesVal = new JLabel("0 items")));
-        
-        lowStockVal = new JLabel("0 items");
-        lowStockVal.setForeground(Theme.WARNING_FG);
-        kpiPanel.add(createKPICard("LOW STOCK WARNINGS", lowStockVal));
+        scrollPane = new JScrollPane(gridContainer);
+        scrollPane.setBorder(null);
+        scrollPane.getViewport().setBackground(Theme.CREAM_BASE);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
 
-        // Real Recent Table Section
-        JPanel recentSection = new JPanel(new BorderLayout());
-        recentSection.setOpaque(false);
+        // Empty state trigger callback
+        emptyStatePanel = new EmptyStatePanel(e -> showAddItemDialog());
 
-        JLabel sectionTitle = new JLabel("Recent Inventory Additions");
-        sectionTitle.setFont(FontLoader.getMerriweather(18f, Font.BOLD));
-        sectionTitle.setForeground(Theme.FOREST_DEEP);
-        sectionTitle.setBorder(new EmptyBorder(0, 0, 12, 0));
-        recentSection.add(sectionTitle, BorderLayout.NORTH);
+        mainContentPanel.add(scrollPane, "GRID_VIEW");
+        mainContentPanel.add(emptyStatePanel, "EMPTY_VIEW");
+        add(mainContentPanel, BorderLayout.CENTER);
 
-        String[] columnNames = {"Name", "Category", "Quantity", "Price", "Status"};
-        recentItemsModel = new DefaultTableModel(columnNames, 0) {
+        // Grid Resize columns auto adjuster
+        addComponentListener(new ComponentAdapter() {
             @Override
-            public boolean isCellEditable(int row, int column) { return false; }
-        };
-
-        recentTable = new JTable(recentItemsModel);
-        recentTable.setFont(FontLoader.getInter(13f, Font.PLAIN));
-        recentTable.setRowHeight(36);
-        recentTable.setGridColor(Theme.BORDER_SUBTLE);
-        recentTable.setShowVerticalLines(false);
-        recentTable.setSelectionBackground(Theme.CREAM_SURFACE);
-        recentTable.setSelectionForeground(Theme.FOREST_DEEP);
-
-        JTableHeader tableHeader = recentTable.getTableHeader();
-        tableHeader.setFont(FontLoader.getInterSemiBold(11f));
-        tableHeader.setBackground(Theme.CREAM_SURFACE);
-        tableHeader.setForeground(Theme.SLATE_MUTED);
-        tableHeader.setPreferredSize(new Dimension(800, 32));
-        tableHeader.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Theme.BORDER_SUBTLE));
-
-        DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
-        leftRenderer.setHorizontalAlignment(JLabel.LEFT);
-        leftRenderer.setBorder(new EmptyBorder(0, 8, 0, 8));
-        recentTable.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
-        recentTable.getColumnModel().getColumn(1).setCellRenderer(leftRenderer);
-
-        DefaultTableCellRenderer numericRenderer = new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
-                setFont(FontLoader.getInter(13f, Font.PLAIN));
-                setForeground(Theme.SLATE_TEXT);
-                setHorizontalAlignment(JLabel.RIGHT);
-                setBorder(new EmptyBorder(0, 8, 0, 16));
-                return this;
-            }
-        };
-        recentTable.getColumnModel().getColumn(2).setCellRenderer(numericRenderer);
-        recentTable.getColumnModel().getColumn(3).setCellRenderer(numericRenderer);
-
-        recentTable.getColumnModel().getColumn(4).setCellRenderer(new DefaultTableCellRenderer() {
-            @Override
-            public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
-                JPanel pillContainer = new JPanel(new GridBagLayout());
-                pillContainer.setOpaque(true);
-                pillContainer.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
-
-                String status = (value != null) ? value.toString() : "";
-                JLabel statusLabel = new JLabel(status);
-                statusLabel.setFont(FontLoader.getInterSemiBold(11f));
-                statusLabel.setOpaque(true);
-
-                if ("In Stock".equalsIgnoreCase(status)) {
-                    statusLabel.setBackground(Theme.SUCCESS_BG);
-                    statusLabel.setForeground(Theme.SUCCESS_FG);
-                } else if ("Low Stock".equalsIgnoreCase(status)) {
-                    statusLabel.setBackground(Theme.WARNING_BG);
-                    statusLabel.setForeground(Theme.WARNING_FG);
-                } else {
-                    statusLabel.setBackground(Theme.ERROR_BG);
-                    statusLabel.setForeground(Theme.ERROR_FG);
-                }
-
-                statusLabel.setBorder(BorderFactory.createCompoundBorder(
-                    new Theme.RoundedBorder(4, statusLabel.getBackground(), 1),
-                    new EmptyBorder(2, 6, 2, 6)
-                ));
-
-                GridBagConstraints gbc = new GridBagConstraints();
-                gbc.anchor = GridBagConstraints.CENTER;
-                pillContainer.add(statusLabel, gbc);
-
-                return pillContainer;
+            public void componentResized(ComponentEvent e) {
+                adjustGridColumns();
             }
         });
-
-        JScrollPane scrollPane = new JScrollPane(recentTable);
-        scrollPane.setBorder(BorderFactory.createLineBorder(Theme.BORDER_SUBTLE, 1));
-        scrollPane.getViewport().setBackground(Color.WHITE);
-        recentSection.add(scrollPane, BorderLayout.CENTER);
-
-        loadedPanel.add(Box.createVerticalStrut(16));
-        loadedPanel.add(kpiPanel);
-        loadedPanel.add(Box.createVerticalStrut(32));
-        loadedPanel.add(recentSection);
-
-        stateCardPanel.add(loadedPanel, "LOADED");
     }
 
-    // --- Empty State Setup ---
-    private void setupEmptyStatePanel() {
-        EmptyStatePanel emptyStatePanel = new EmptyStatePanel(e -> showAddItemDialog());
-        stateCardPanel.add(emptyStatePanel, "EMPTY");
+    private CardPanel createStatsCard(String title, JLabel valueLabel, String iconType) {
+        return createStatsCard(title, valueLabel, iconType, Theme.FOREST_DEEP);
     }
 
-    // --- Error State Setup ---
-    private void setupErrorStatePanel() {
-        JPanel errorPanel = new JPanel(new GridBagLayout());
-        errorPanel.setBackground(Color.WHITE);
-        errorPanel.setBorder(new Theme.RoundedBorder(8, Theme.BORDER_SUBTLE, 1));
+    private CardPanel createStatsCard(String title, JLabel valueLabel, String iconType, Color valueColor) {
+        CardPanel card = new CardPanel(12);
+        card.setLayout(new BorderLayout(16, 0));
+        card.setBorder(new EmptyBorder(16, 20, 16, 20));
 
-        JPanel inner = new JPanel();
-        inner.setOpaque(false);
-        inner.setLayout(new BoxLayout(inner, BoxLayout.Y_AXIS));
+        // Circular Left Icon
+        JPanel iconPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                
+                int w = getWidth();
+                int h = getHeight();
+                
+                // Draw circle background
+                g2.setColor("warning".equals(iconType) ? Theme.ERROR_BG : Theme.SUCCESS_BG);
+                g2.fillOval(0, 0, w, h);
 
-        JLabel errorIcon = new JLabel("⚠️");
-        errorIcon.setFont(new Font("Serif", Font.PLAIN, 48));
-        errorIcon.setAlignmentX(CENTER_ALIGNMENT);
+                // Draw vector icons
+                g2.setColor("warning".equals(iconType) ? Theme.ERROR_FG : Theme.FOREST_LEAF);
+                g2.setStroke(new BasicStroke(1.5f));
 
-        JLabel errorTitle = new JLabel("Database Access Failure");
-        errorTitle.setFont(FontLoader.getMerriweather(18f, Font.BOLD));
-        errorTitle.setForeground(Theme.ERROR_FG);
-        errorTitle.setAlignmentX(CENTER_ALIGNMENT);
+                if ("package".equals(iconType)) {
+                    // Box Outline
+                    g2.drawRect(w/2 - 6, h/2 - 6, 12, 12);
+                    g2.drawLine(w/2 - 6, h/2 - 2, w/2 + 6, h/2 - 2);
+                    g2.drawLine(w/2, h/2 - 6, w/2, h/2 + 6);
+                } else if ("science".equals(iconType)) {
+                    // Flask / Beaker
+                    Path2D.Double flask = new Path2D.Double();
+                    flask.moveTo(w*0.4, h*0.3);
+                    flask.lineTo(w*0.6, h*0.3);
+                    flask.moveTo(w*0.5, h*0.3);
+                    flask.lineTo(w*0.5, h*0.55);
+                    flask.lineTo(w*0.3, h*0.75);
+                    flask.lineTo(w*0.7, h*0.75);
+                    flask.lineTo(w*0.5, h*0.55);
+                    g2.draw(flask);
+                } else {
+                    // Triangle Warning sign
+                    Path2D.Double tri = new Path2D.Double();
+                    tri.moveTo(w*0.5, h*0.25);
+                    tri.lineTo(w*0.28, h*0.75);
+                    tri.lineTo(w*0.72, h*0.75);
+                    tri.closePath();
+                    g2.draw(tri);
+                    g2.drawLine((int)(w*0.5), (int)(h*0.45), (int)(w*0.5), (int)(h*0.62));
+                    g2.drawOval((int)(w*0.5 - 0.5), (int)(h*0.68), 1, 1);
+                }
+                g2.dispose();
+            }
+        };
+        iconPanel.setPreferredSize(new Dimension(42, 42));
+        iconPanel.setOpaque(false);
 
-        JLabel errorDesc = new JLabel("<html><center>We encountered a file lock or schema error while loading database metrics.<br>Please ensure the SQLite database is not locked by another process.</center></html>");
-        errorDesc.setFont(FontLoader.getInter(13f, Font.PLAIN));
-        errorDesc.setForeground(Theme.SLATE_MUTED);
-        errorDesc.setAlignmentX(CENTER_ALIGNMENT);
-        errorDesc.setHorizontalAlignment(SwingConstants.CENTER);
+        // Right Info Panel
+        JPanel infoPanel = new JPanel();
+        infoPanel.setOpaque(false);
+        infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
 
-        JButton retryBtn = new JButton("Retry Connection");
-        Theme.stylePrimaryButton(retryBtn);
-        retryBtn.setAlignmentX(CENTER_ALIGNMENT);
-        retryBtn.setMaximumSize(new Dimension(160, 36));
-        retryBtn.setPreferredSize(new Dimension(160, 36));
-        retryBtn.addActionListener(e -> onPageLoad());
-
-        inner.add(errorIcon);
-        inner.add(Box.createVerticalStrut(12));
-        inner.add(errorTitle);
-        inner.add(Box.createVerticalStrut(6));
-        inner.add(errorDesc);
-        inner.add(Box.createVerticalStrut(20));
-        inner.add(retryBtn);
-
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.CENTER;
-        errorPanel.add(inner, gbc);
-
-        stateCardPanel.add(errorPanel, "ERROR");
-    }
-
-    private CardPanel createKPICard(String title, JLabel valueLabel) {
-        CardPanel card = new CardPanel(16);
-        card.setLayout(new BorderLayout());
-        
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(FontLoader.getInterSemiBold(10f));
+        titleLabel.setFont(FontLoader.getInterSemiBold(9f));
         titleLabel.setForeground(Theme.SLATE_MUTED);
-        
-        valueLabel.setFont(FontLoader.getMerriweather(18f, Font.BOLD));
-        valueLabel.setForeground(Theme.FOREST_DEEP);
 
-        card.add(titleLabel, BorderLayout.NORTH);
-        card.add(valueLabel, BorderLayout.CENTER);
+        valueLabel.setFont(FontLoader.getMerriweather(18f, Font.BOLD));
+        valueLabel.setForeground(valueColor);
+
+        infoPanel.add(titleLabel);
+        infoPanel.add(Box.createVerticalStrut(2));
+        infoPanel.add(valueLabel);
+
+        card.add(iconPanel, BorderLayout.WEST);
+        card.add(infoPanel, BorderLayout.CENTER);
         return card;
+    }
+
+    private void adjustGridColumns() {
+        int width = getWidth();
+        if (width <= 0) return;
+
+        int cols = Math.max(1, (width - 64) / 340);
+        GridLayout layout = (GridLayout) gridContainer.getLayout();
+        if (layout.getColumns() != cols) {
+            layout.setColumns(cols);
+            gridContainer.revalidate();
+        }
     }
 
     private void showAddItemDialog() {
@@ -330,8 +299,40 @@ public class DashboardPage extends Page {
             new Thread(() -> {
                 boolean added = itemService.addItem(newItem);
                 if (added) {
-                    System.out.println("Registered first item successfully: " + newItem.getName());
-                    // Reload data
+                    loadDashboardData();
+                }
+            }).start();
+        }
+    }
+
+    private void showEditItemDialog(Item item) {
+        Frame topFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        ItemDialog dialog = new ItemDialog(topFrame, "Update Item Detail", item);
+        dialog.setVisible(true);
+
+        if (dialog.isSucceeded()) {
+            new Thread(() -> {
+                boolean updated = itemService.updateItem(item);
+                if (updated) {
+                    loadDashboardData();
+                }
+            }).start();
+        }
+    }
+
+    private void handleDeleteItem(Item item) {
+        int choice = JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to delete " + item.getName() + "?\nThis operation cannot be undone.",
+            "Delete Confirmation",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.WARNING_MESSAGE
+        );
+
+        if (choice == JOptionPane.YES_OPTION) {
+            new Thread(() -> {
+                boolean deleted = itemService.deleteItemByUuid(item.getUuid());
+                if (deleted) {
                     loadDashboardData();
                 }
             }).start();
@@ -340,125 +341,223 @@ public class DashboardPage extends Page {
 
     @Override
     public void onPageLoad() {
-        // Update user information
-        User user = AppState.getInstance().getCurrentUser();
-        if (user != null) {
-            welcomeLabel.setText("Welcome back, " + user.getDisplayName() + " | Role: " + user.getRole());
-        }
-
-        // Show LOADING state and kick start shimmers
-        stateLayout.show(stateCardPanel, "LOADING");
-        startSkeletons();
-
-        // Query database in background thread
         new Thread(this::loadDashboardData).start();
     }
 
-    @Override
-    public void onPageUnload() {
-        stopSkeletons();
-    }
-
-    private void startSkeletons() {
-        if (skeletonTable != null) skeletonTable.startAnimation();
-        if (skeletonCard1 != null) skeletonCard1.startAnimation();
-        if (skeletonCard2 != null) skeletonCard2.startAnimation();
-        if (skeletonCard3 != null) skeletonCard3.startAnimation();
-        if (skeletonCard4 != null) skeletonCard4.startAnimation();
-    }
-
-    private void stopSkeletons() {
-        if (skeletonTable != null) skeletonTable.stopAnimation();
-        if (skeletonCard1 != null) skeletonCard1.stopAnimation();
-        if (skeletonCard2 != null) skeletonCard2.stopAnimation();
-        if (skeletonCard3 != null) skeletonCard3.stopAnimation();
-        if (skeletonCard4 != null) skeletonCard4.stopAnimation();
-    }
-
     private void loadDashboardData() {
-        // Mimic a tiny artificial network/disk delay (e.g. 1000ms) to let skeletons shine!
         try {
-            Thread.sleep(800);
-        } catch (InterruptedException e) {
-            // Ignore
-        }
-
-        try {
-            List<Item> items = itemService.getAllItems();
+            loadedItems = itemService.getAllItems();
             
-            if (items == null) {
+            if (loadedItems.isEmpty()) {
                 SwingUtilities.invokeLater(() -> {
-                    stopSkeletons();
-                    stateLayout.show(stateCardPanel, "ERROR");
+                    totalUnitsVal.setText("0 units");
+                    totalValueVal.setText("$0.00");
+                    rawStockVal.setText("0 units");
+                    processedGoodsVal.setText("0 units");
+                    lowStockAlertsVal.setText("0 items");
+                    contentSwitcher.show(mainContentPanel, "EMPTY_VIEW");
                 });
                 return;
             }
 
-            if (items.isEmpty()) {
-                SwingUtilities.invokeLater(() -> {
-                    stopSkeletons();
-                    stateLayout.show(stateCardPanel, "EMPTY");
-                });
-                return;
-            }
-
-            // Perform calculations
+            // Calculations
             int totalUnits = 0;
             double totalValue = 0.0;
-            int uniqueTypes = items.size();
-            int lowStockAlerts = 0;
+            int rawStock = 0;
+            int processedStock = 0;
+            int lowStockCount = 0;
 
-            for (Item item : items) {
+            for (Item item : loadedItems) {
                 totalUnits += item.getQuantity();
                 totalValue += item.getQuantity() * item.getPrice();
-                if (item.getQuantity() < 10 || "Low Stock".equalsIgnoreCase(item.getStatus()) || "Out of Stock".equalsIgnoreCase(item.getStatus())) {
-                    lowStockAlerts++;
+                
+                boolean isRaw = item.getCategory().toLowerCase().contains("raw") || item.getCategory().toLowerCase().contains("ingredient");
+                if (isRaw) {
+                    rawStock += item.getQuantity();
+                } else {
+                    processedStock += item.getQuantity();
+                }
+
+                if ("Low Stock".equalsIgnoreCase(item.getStatus()) || "Out of Stock".equalsIgnoreCase(item.getStatus())) {
+                    lowStockCount++;
                 }
             }
 
-            final int finalTotalUnits = totalUnits;
-            final double finalTotalValue = totalValue;
-            final int finalUniqueTypes = uniqueTypes;
-            final int finalLowStockAlerts = lowStockAlerts;
+            final int finalUnits = totalUnits;
+            final double finalVal = totalValue;
+            final int finalRaw = rawStock;
+            final int finalProcessed = processedStock;
+            final int finalLow = lowStockCount;
 
             NumberFormat usdFormat = NumberFormat.getCurrencyInstance(Locale.US);
             NumberFormat unitFormat = NumberFormat.getNumberInstance(Locale.US);
 
             SwingUtilities.invokeLater(() -> {
-                stopSkeletons();
+                totalUnitsVal.setText(unitFormat.format(finalUnits) + " units");
+                totalValueVal.setText(usdFormat.format(finalVal));
                 
-                // Update KPI values
-                totalUnitsVal.setText(unitFormat.format(finalTotalUnits) + " units");
-                totalValVal.setText(usdFormat.format(finalTotalValue));
-                uniqueTypesVal.setText(finalUniqueTypes + " items");
-                lowStockVal.setText(finalLowStockAlerts + " items");
+                rawStockVal.setText(unitFormat.format(finalRaw) + " units");
+                processedGoodsVal.setText(unitFormat.format(finalProcessed) + " units");
+                lowStockAlertsVal.setText(finalLow + " items");
 
-                // Populate recent items table (first 5)
-                recentItemsModel.setRowCount(0);
-                int count = 0;
-                for (Item item : items) {
-                    if (count >= 5) break;
-                    recentItemsModel.addRow(new Object[]{
-                        item.getName(),
-                        item.getCategory(),
-                        unitFormat.format(item.getQuantity()),
-                        usdFormat.format(item.getPrice()),
-                        item.getStatus()
-                    });
-                    count++;
+                // Populate bento cards grid
+                gridContainer.removeAll();
+                for (Item item : loadedItems) {
+                    gridContainer.add(createProductBentoCard(item));
                 }
+                gridContainer.revalidate();
+                gridContainer.repaint();
 
-                // Show LOADED state
-                stateLayout.show(stateCardPanel, "LOADED");
+                adjustGridColumns();
+                contentSwitcher.show(mainContentPanel, "GRID_VIEW");
             });
 
         } catch (Exception e) {
-            System.err.println("Dashboard loading failed.");
+            System.err.println("Database load error on DashboardPage.");
             e.printStackTrace();
-            SwingUtilities.invokeLater(() -> {
-                stopSkeletons();
-                stateLayout.show(stateCardPanel, "ERROR");
-            });
         }
+    }
+
+    private JPanel createProductBentoCard(Item item) {
+        CardPanel card = new CardPanel(12);
+        card.setLayout(new BorderLayout());
+        card.setBackground(Theme.CREAM_SURFACE);
+        card.setBorder(null);
+
+        // Match image based on name matching
+        String imageUrl = "";
+        String lowercaseName = item.getName().toLowerCase();
+        for (Map.Entry<String, String> entry : IMAGE_URLS.entrySet()) {
+            if (lowercaseName.contains(entry.getKey())) {
+                imageUrl = entry.getValue();
+                break;
+            }
+        }
+
+        final String finalUrl = imageUrl;
+        boolean isRaw = item.getCategory().toLowerCase().contains("raw") || item.getCategory().toLowerCase().contains("ingredient");
+
+        // Image Section with overlaid badge
+        JPanel imagePanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                if (!finalUrl.isEmpty()) {
+                    ImageIcon icon = ImageLoader.getOrLoadImage(item.getName(), finalUrl, this, getWidth(), getHeight());
+                    if (icon != null) {
+                        g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), null);
+                    }
+                } else {
+                    // Fallback gradient
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    g2.setColor(isRaw ? Theme.FOREST_LEAF : Theme.SLATE_MUTED);
+                    g2.fillRect(0, 0, getWidth(), getHeight());
+                    g2.dispose();
+                }
+
+                // Overlay Badge in Top-Right
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                
+                String badgeText = isRaw ? "Raw" : "Processed";
+                Color bg = isRaw ? Theme.FOREST_DEEP : Theme.FOREST_LEAF;
+                
+                g2.setColor(bg);
+                int badgeW = 70;
+                int badgeH = 20;
+                int badgeX = getWidth() - badgeW - 12;
+                int badgeY = 12;
+                g2.fillRoundRect(badgeX, badgeY, badgeW, badgeH, 4, 4);
+
+                g2.setColor(Color.WHITE);
+                g2.setFont(FontLoader.getInterSemiBold(9f));
+                FontMetrics fm = g2.getFontMetrics();
+                int textX = badgeX + (badgeW - fm.stringWidth(badgeText)) / 2;
+                int textY = badgeY + (badgeH - fm.getHeight()) / 2 + fm.getAscent();
+                g2.drawString(badgeText, textX, textY);
+                g2.dispose();
+            }
+        };
+        imagePanel.setPreferredSize(new Dimension(320, 140));
+
+        // Details Panel
+        JPanel bodyPanel = new JPanel();
+        bodyPanel.setOpaque(false);
+        bodyPanel.setLayout(new BoxLayout(bodyPanel, BoxLayout.Y_AXIS));
+        bodyPanel.setBorder(new EmptyBorder(16, 16, 16, 16));
+
+        JLabel nameLabel = new JLabel(item.getName());
+        nameLabel.setFont(FontLoader.getMerriweather(16f, Font.BOLD));
+        nameLabel.setForeground(Theme.FOREST_DEEP);
+        nameLabel.setBorder(new EmptyBorder(0, 0, 12, 0));
+
+        // Separator
+        JPanel line = new JPanel();
+        line.setMaximumSize(new Dimension(Integer.MAX_VALUE, 1));
+        line.setPreferredSize(new Dimension(100, 1));
+        line.setBackground(Theme.BORDER_SUBTLE);
+
+        // Stats
+        JPanel statsRow = new JPanel(new GridLayout(1, 2, 8, 0));
+        statsRow.setOpaque(false);
+        statsRow.setBorder(new EmptyBorder(12, 0, 12, 0));
+
+        JPanel qtyPanel = new JPanel();
+        qtyPanel.setOpaque(false);
+        qtyPanel.setLayout(new BoxLayout(qtyPanel, BoxLayout.Y_AXIS));
+        JLabel qtyTitle = new JLabel("QUANTITY");
+        qtyTitle.setFont(FontLoader.getInterSemiBold(9f));
+        qtyTitle.setForeground(Theme.SLATE_MUTED);
+        JLabel qtyVal = new JLabel(item.getQuantity() + (isRaw ? " kg" : " Units"));
+        qtyVal.setFont(FontLoader.getInterSemiBold(13f));
+        qtyVal.setForeground(Theme.FOREST_DEEP);
+        qtyPanel.add(qtyTitle);
+        qtyPanel.add(qtyVal);
+
+        JPanel pricePanel = new JPanel();
+        pricePanel.setOpaque(false);
+        pricePanel.setLayout(new BoxLayout(pricePanel, BoxLayout.Y_AXIS));
+        JLabel priceTitle = new JLabel("PRICE");
+        priceTitle.setFont(FontLoader.getInterSemiBold(9f));
+        priceTitle.setForeground(Theme.SLATE_MUTED);
+        JLabel priceVal = new JLabel(NumberFormat.getCurrencyInstance(Locale.US).format(item.getPrice()) + (isRaw ? " / kg" : " / u"));
+        priceVal.setFont(FontLoader.getInterSemiBold(13f));
+        priceVal.setForeground(Theme.FOREST_DEEP);
+        pricePanel.add(priceTitle);
+        pricePanel.add(priceVal);
+
+        statsRow.add(qtyPanel);
+        statsRow.add(pricePanel);
+
+        // Footer Actions (Edit / Delete buttons matching mockup)
+        JPanel footerRow = new JPanel(new BorderLayout());
+        footerRow.setOpaque(false);
+        footerRow.setBorder(new EmptyBorder(8, 0, 0, 0));
+
+        JButton editBtn = new JButton("EDIT");
+        Theme.styleSecondaryButton(editBtn);
+        editBtn.setPreferredSize(new Dimension(72, 28));
+        editBtn.setFont(FontLoader.getInterSemiBold(9f));
+        editBtn.addActionListener(e -> showEditItemDialog(item));
+
+        JButton removeBtn = new JButton("REMOVE");
+        Theme.styleSecondaryButton(removeBtn);
+        removeBtn.setForeground(Theme.ERROR_FG);
+        removeBtn.setPreferredSize(new Dimension(84, 28));
+        removeBtn.setFont(FontLoader.getInterSemiBold(9f));
+        removeBtn.addActionListener(e -> handleDeleteItem(item));
+
+        footerRow.add(editBtn, BorderLayout.WEST);
+        footerRow.add(removeBtn, BorderLayout.EAST);
+
+        bodyPanel.add(nameLabel);
+        bodyPanel.add(line);
+        bodyPanel.add(statsRow);
+        bodyPanel.add(footerRow);
+
+        card.add(imagePanel, BorderLayout.NORTH);
+        card.add(bodyPanel, BorderLayout.CENTER);
+        return card;
     }
 }
