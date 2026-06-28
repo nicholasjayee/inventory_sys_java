@@ -43,7 +43,21 @@ public class DashboardPage extends Page {
     private void initializeUI() {
         setBackground(Theme.CREAM_BASE);
         setLayout(new BorderLayout());
-        setBorder(new EmptyBorder(32, 32, 32, 32));
+        setBorder(null);
+
+        // Wrapper that tracks viewport width to prevent horizontal scrolling
+        JPanel scrollContent = new JPanel(new BorderLayout()) {
+            @Override
+            public Dimension getPreferredSize() {
+                Dimension d = super.getPreferredSize();
+                if (getParent() instanceof JViewport) {
+                    d.width = getParent().getWidth();
+                }
+                return d;
+            }
+        };
+        scrollContent.setOpaque(false);
+        scrollContent.setBorder(new EmptyBorder(32, 32, 32, 32));
 
         // 1. Header component (with Create Item callback)
         headerPanel = new DashboardHeader(this::showAddItemDialog);
@@ -58,7 +72,7 @@ public class DashboardPage extends Page {
         northPanel.add(headerPanel);
         northPanel.add(statsBar);
         northPanel.add(Box.createVerticalStrut(32));
-        add(northPanel, BorderLayout.NORTH);
+        scrollContent.add(northPanel, BorderLayout.NORTH);
 
         // 3. Grid Content Container (Empty vs Populated Bento list layout)
         contentSwitcher = new CardLayout();
@@ -69,17 +83,20 @@ public class DashboardPage extends Page {
         gridContainer.setOpaque(false);
         gridContainer.setLayout(new GridLayout(0, 3, 24, 24)); // Auto cols calculated on resize
 
-        scrollPane = new JScrollPane(gridContainer);
-        scrollPane.setBorder(null);
-        scrollPane.getViewport().setBackground(Theme.CREAM_BASE);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
-
         // Empty state trigger callback
         emptyStatePanel = new EmptyStatePanel(e -> showAddItemDialog());
 
-        mainContentPanel.add(scrollPane, "GRID_VIEW");
+        mainContentPanel.add(gridContainer, "GRID_VIEW");
         mainContentPanel.add(emptyStatePanel, "EMPTY_VIEW");
-        add(mainContentPanel, BorderLayout.CENTER);
+        scrollContent.add(mainContentPanel, BorderLayout.CENTER);
+
+        scrollPane = new JScrollPane(scrollContent);
+        scrollPane.setBorder(null);
+        scrollPane.getViewport().setBackground(Theme.CREAM_BASE);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        add(scrollPane, BorderLayout.CENTER);
 
         // Grid Resize columns auto adjuster
         addComponentListener(new ComponentAdapter() {
