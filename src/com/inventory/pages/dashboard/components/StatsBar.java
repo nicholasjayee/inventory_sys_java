@@ -48,12 +48,18 @@ public class StatsBar extends JPanel {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(bgCircleColor);
-                g2.fillOval(0, 0, getWidth(), getHeight());
+                
+                // Ensure perfect circle regardless of layout stretching
+                int size = Math.min(getWidth(), getHeight());
+                int x = (getWidth() - size) / 2;
+                int y = (getHeight() - size) / 2;
+                
+                g2.fillOval(x, y, size, size);
                 g2.dispose();
             }
         };
         circle.setOpaque(false);
-        circle.setPreferredSize(new Dimension(42, 42));
+        circle.setPreferredSize(new Dimension(48, 48)); // w-12 h-12 = 48px
 
         // Load, scale, and center the PNG icon in the circle
         try {
