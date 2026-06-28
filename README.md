@@ -39,4 +39,8 @@ To immediately build and launch the application on MacOS or Linux:
 * **Company**: code8
 
 ## 📄 License
-This project is licensed under the **MIT License**. See the `LICENSE` file for details.
+**Proprietary and Confidential**
+
+All rights reserved. This software and associated documentation files are the proprietary property of **Ssekabira Nicholas / code8**. 
+
+Unauthorized copying, distribution, modification, or use of this software, via any medium, is strictly prohibited without explicit prior written consent from the author.
