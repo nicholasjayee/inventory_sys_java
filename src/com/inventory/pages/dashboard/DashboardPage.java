@@ -6,7 +6,6 @@ import com.inventory.components.FontLoader;
 import com.inventory.components.ImageLoader;
 import com.inventory.components.ItemDialog;
 import com.inventory.components.SkeletonCard;
-import com.inventory.components.SkeletonTable;
 import com.inventory.components.Theme;
 import com.inventory.models.Item;
 import com.inventory.router.Page;
@@ -15,7 +14,6 @@ import com.inventory.services.ItemService;
 import java.awt.*;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
-import java.awt.geom.Path2D;
 import java.text.NumberFormat;
 import java.util.HashMap;
 import java.util.List;
@@ -152,9 +150,9 @@ public class DashboardPage extends Page {
         statsBar.setPreferredSize(new Dimension(800, 90));
         statsBar.setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
 
-        statsBar.add(createStatsCard("RAW STOCK", rawStockVal = new JLabel("0 units"), "package"));
-        statsBar.add(createStatsCard("PROCESSED GOODS", processedGoodsVal = new JLabel("0 units"), "science"));
-        statsBar.add(createStatsCard("LOW STOCK ALERTS", lowStockAlertsVal = new JLabel("0 items"), "warning", Theme.ERROR_FG));
+        statsBar.add(createStatsCard("RAW STOCK", rawStockVal = new JLabel("0 units"), "assets/icons/eco_active.png", Theme.SUCCESS_BG));
+        statsBar.add(createStatsCard("PROCESSED GOODS", processedGoodsVal = new JLabel("0 units"), "assets/icons/cog_active.png", Theme.SUCCESS_BG));
+        statsBar.add(createStatsCard("LOW STOCK ALERTS", lowStockAlertsVal = new JLabel("0 items"), "assets/icons/warning.png", Theme.ERROR_BG));
 
         // Group Header & Stats Bar vertically
         JPanel northPanel = new JPanel();
@@ -195,66 +193,35 @@ public class DashboardPage extends Page {
         });
     }
 
-    private CardPanel createStatsCard(String title, JLabel valueLabel, String iconType) {
-        return createStatsCard(title, valueLabel, iconType, Theme.FOREST_DEEP);
-    }
-
-    private CardPanel createStatsCard(String title, JLabel valueLabel, String iconType, Color valueColor) {
+    private CardPanel createStatsCard(String title, JLabel valueLabel, String iconPath, Color bgCircleColor) {
         CardPanel card = new CardPanel(12);
         card.setLayout(new BorderLayout(16, 0));
         card.setBorder(new EmptyBorder(16, 20, 16, 20));
 
-        // Circular Left Icon
-        JPanel iconPanel = new JPanel() {
+        // Circular Icon container
+        JPanel circle = new JPanel(new GridBagLayout()) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-                
-                int w = getWidth();
-                int h = getHeight();
-                
-                // Draw circle background
-                g2.setColor("warning".equals(iconType) ? Theme.ERROR_BG : Theme.SUCCESS_BG);
-                g2.fillOval(0, 0, w, h);
-
-                // Draw vector icons
-                g2.setColor("warning".equals(iconType) ? Theme.ERROR_FG : Theme.FOREST_LEAF);
-                g2.setStroke(new BasicStroke(1.5f));
-
-                if ("package".equals(iconType)) {
-                    // Box Outline
-                    g2.drawRect(w/2 - 6, h/2 - 6, 12, 12);
-                    g2.drawLine(w/2 - 6, h/2 - 2, w/2 + 6, h/2 - 2);
-                    g2.drawLine(w/2, h/2 - 6, w/2, h/2 + 6);
-                } else if ("science".equals(iconType)) {
-                    // Flask / Beaker
-                    Path2D.Double flask = new Path2D.Double();
-                    flask.moveTo(w*0.4, h*0.3);
-                    flask.lineTo(w*0.6, h*0.3);
-                    flask.moveTo(w*0.5, h*0.3);
-                    flask.lineTo(w*0.5, h*0.55);
-                    flask.lineTo(w*0.3, h*0.75);
-                    flask.lineTo(w*0.7, h*0.75);
-                    flask.lineTo(w*0.5, h*0.55);
-                    g2.draw(flask);
-                } else {
-                    // Triangle Warning sign
-                    Path2D.Double tri = new Path2D.Double();
-                    tri.moveTo(w*0.5, h*0.25);
-                    tri.lineTo(w*0.28, h*0.75);
-                    tri.lineTo(w*0.72, h*0.75);
-                    tri.closePath();
-                    g2.draw(tri);
-                    g2.drawLine((int)(w*0.5), (int)(h*0.45), (int)(w*0.5), (int)(h*0.62));
-                    g2.drawOval((int)(w*0.5 - 0.5), (int)(h*0.68), 1, 1);
-                }
+                g2.setColor(bgCircleColor);
+                g2.fillOval(0, 0, getWidth(), getHeight());
                 g2.dispose();
             }
         };
-        iconPanel.setPreferredSize(new Dimension(42, 42));
-        iconPanel.setOpaque(false);
+        circle.setOpaque(false);
+        circle.setPreferredSize(new Dimension(42, 42));
+
+        // Load, scale, and center the PNG icon in the circle
+        try {
+            ImageIcon icon = new ImageIcon(iconPath);
+            Image scaled = icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH);
+            JLabel iconLabel = new JLabel(new ImageIcon(scaled));
+            circle.add(iconLabel);
+        } catch (Exception e) {
+            System.err.println("Failed to display card icon: " + iconPath);
+        }
 
         // Right Info Panel
         JPanel infoPanel = new JPanel();
@@ -266,13 +233,16 @@ public class DashboardPage extends Page {
         titleLabel.setForeground(Theme.SLATE_MUTED);
 
         valueLabel.setFont(FontLoader.getMerriweather(18f, Font.BOLD));
-        valueLabel.setForeground(valueColor);
+        valueLabel.setForeground(Theme.FOREST_DEEP);
+        if (title.contains("LOW")) {
+            valueLabel.setForeground(Theme.ERROR_FG);
+        }
 
         infoPanel.add(titleLabel);
         infoPanel.add(Box.createVerticalStrut(2));
         infoPanel.add(valueLabel);
 
-        card.add(iconPanel, BorderLayout.WEST);
+        card.add(circle, BorderLayout.WEST);
         card.add(infoPanel, BorderLayout.CENTER);
         return card;
     }
@@ -530,23 +500,43 @@ public class DashboardPage extends Page {
         statsRow.add(qtyPanel);
         statsRow.add(pricePanel);
 
-        // Footer Actions (Edit / Delete buttons matching mockup)
+        // Footer Actions (Edit / Delete buttons with high-res PNG icons)
         JPanel footerRow = new JPanel(new BorderLayout());
         footerRow.setOpaque(false);
         footerRow.setBorder(new EmptyBorder(8, 0, 0, 0));
 
         JButton editBtn = new JButton("EDIT");
         Theme.styleSecondaryButton(editBtn);
-        editBtn.setPreferredSize(new Dimension(72, 28));
+        editBtn.setPreferredSize(new Dimension(76, 28));
         editBtn.setFont(FontLoader.getInterSemiBold(9f));
         editBtn.addActionListener(e -> showEditItemDialog(item));
+
+        // Load and scale pencil edit icon
+        try {
+            ImageIcon editIcon = new ImageIcon("assets/icons/edit.png");
+            Image scaledEdit = editIcon.getImage().getScaledInstance(12, 12, Image.SCALE_SMOOTH);
+            editBtn.setIcon(new ImageIcon(scaledEdit));
+            editBtn.setIconTextGap(6);
+        } catch (Exception e) {
+            System.err.println("Failed to load edit icon");
+        }
 
         JButton removeBtn = new JButton("REMOVE");
         Theme.styleSecondaryButton(removeBtn);
         removeBtn.setForeground(Theme.ERROR_FG);
-        removeBtn.setPreferredSize(new Dimension(84, 28));
+        removeBtn.setPreferredSize(new Dimension(92, 28));
         removeBtn.setFont(FontLoader.getInterSemiBold(9f));
         removeBtn.addActionListener(e -> handleDeleteItem(item));
+
+        // Load and scale trash delete icon
+        try {
+            ImageIcon deleteIcon = new ImageIcon("assets/icons/delete.png");
+            Image scaledDelete = deleteIcon.getImage().getScaledInstance(12, 12, Image.SCALE_SMOOTH);
+            removeBtn.setIcon(new ImageIcon(scaledDelete));
+            removeBtn.setIconTextGap(6);
+        } catch (Exception e) {
+            System.err.println("Failed to load delete icon");
+        }
 
         footerRow.add(editBtn, BorderLayout.WEST);
         footerRow.add(removeBtn, BorderLayout.EAST);

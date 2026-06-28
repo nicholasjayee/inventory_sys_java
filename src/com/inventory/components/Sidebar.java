@@ -16,12 +16,41 @@ public class Sidebar extends JPanel {
     private JLabel userLabel;
     private JLabel roleLabel;
 
+    // Sidebar PNG Icons (Loaded and scaled to 18x18)
+    private ImageIcon dbActive;
+    private ImageIcon dbMuted;
+    private ImageIcon ecoActive;
+    private ImageIcon ecoMuted;
+    private ImageIcon cogActive;
+    private ImageIcon cogMuted;
+
     public Sidebar(Router router) {
         this.router = router;
+        loadIcons();
         initializeUI();
         
         // Listen to state changes (e.g. login/logout)
         AppState.getInstance().addListener(state -> updateUserDetails(state.getCurrentUser()));
+    }
+
+    private void loadIcons() {
+        dbActive = loadAndScaleIcon("assets/icons/dashboard_active.png");
+        dbMuted = loadAndScaleIcon("assets/icons/dashboard_muted.png");
+        ecoActive = loadAndScaleIcon("assets/icons/eco_active.png");
+        ecoMuted = loadAndScaleIcon("assets/icons/eco_muted.png");
+        cogActive = loadAndScaleIcon("assets/icons/cog_active.png");
+        cogMuted = loadAndScaleIcon("assets/icons/cog_muted.png");
+    }
+
+    private ImageIcon loadAndScaleIcon(String path) {
+        try {
+            ImageIcon icon = new ImageIcon(path);
+            Image scaledImg = icon.getImage().getScaledInstance(18, 18, Image.SCALE_SMOOTH);
+            return new ImageIcon(scaledImg);
+        } catch (Exception e) {
+            System.err.println("Failed to load icon: " + path);
+            return null;
+        }
     }
 
     private void initializeUI() {
@@ -55,15 +84,15 @@ public class Sidebar extends JPanel {
         JPanel navPanel = new JPanel();
         navPanel.setOpaque(false);
         navPanel.setLayout(new BoxLayout(navPanel, BoxLayout.Y_AXIS));
-        navPanel.setBorder(new EmptyBorder(0, 0, 0, 0)); // Padding moved inside buttons
+        navPanel.setBorder(new EmptyBorder(0, 0, 0, 0));
 
-        dashboardBtn = createNavButton("Dashboard");
+        dashboardBtn = createNavButton("Dashboard", dbMuted, dbActive);
         dashboardBtn.addActionListener(e -> router.navigate("/dashboard"));
 
-        rawMaterialsBtn = createNavButton("Raw Materials");
+        rawMaterialsBtn = createNavButton("Raw Materials", ecoMuted, ecoActive);
         rawMaterialsBtn.addActionListener(e -> router.navigate("/raw-items"));
 
-        processedGoodsBtn = createNavButton("Processed Goods");
+        processedGoodsBtn = createNavButton("Processed Goods", cogMuted, cogActive);
         processedGoodsBtn.addActionListener(e -> router.navigate("/items"));
 
         navPanel.add(dashboardBtn);
@@ -109,8 +138,10 @@ public class Sidebar extends JPanel {
         add(userPanel, BorderLayout.SOUTH);
     }
 
-    private JButton createNavButton(String text) {
+    private JButton createNavButton(String text, ImageIcon mutedIcon, ImageIcon activeIcon) {
         JButton button = new JButton(text);
+        button.setIcon(mutedIcon);
+        button.setIconTextGap(12); // gap-3 matching Tailwind
         button.setFont(FontLoader.getInterMedium(14f));
         button.setForeground(Theme.SLATE_MUTED);
         button.setBackground(Theme.CREAM_SURFACE);
@@ -129,6 +160,9 @@ public class Sidebar extends JPanel {
                 if (button.getForeground() != Theme.FOREST_DEEP) {
                     button.setBackground(Theme.CREAM_BASE);
                     button.setForeground(Theme.FOREST_LEAF);
+                    if (mutedIcon == dbMuted) button.setIcon(dbActive);
+                    if (mutedIcon == ecoMuted) button.setIcon(ecoActive);
+                    if (mutedIcon == cogMuted) button.setIcon(cogActive);
                 }
             }
             @Override
@@ -136,6 +170,7 @@ public class Sidebar extends JPanel {
                 if (button.getForeground() != Theme.FOREST_DEEP) {
                     button.setBackground(Theme.CREAM_SURFACE);
                     button.setForeground(Theme.SLATE_MUTED);
+                    button.setIcon(mutedIcon);
                 }
             }
         });
@@ -145,31 +180,33 @@ public class Sidebar extends JPanel {
 
     public void setActiveRoute(String path) {
         // Reset styles
-        resetButtonTheme(dashboardBtn);
-        resetButtonTheme(rawMaterialsBtn);
-        resetButtonTheme(processedGoodsBtn);
+        resetButtonTheme(dashboardBtn, dbMuted);
+        resetButtonTheme(rawMaterialsBtn, ecoMuted);
+        resetButtonTheme(processedGoodsBtn, cogMuted);
 
         if ("/dashboard".equals(path)) {
-            highlightButton(dashboardBtn);
+            highlightButton(dashboardBtn, dbActive);
         } else if ("/raw-items".equals(path)) {
-            highlightButton(rawMaterialsBtn);
+            highlightButton(rawMaterialsBtn, ecoActive);
         } else if ("/items".equals(path)) {
-            highlightButton(processedGoodsBtn);
+            highlightButton(processedGoodsBtn, cogActive);
         }
     }
 
-    private void resetButtonTheme(JButton button) {
+    private void resetButtonTheme(JButton button, ImageIcon mutedIcon) {
+        button.setIcon(mutedIcon);
         button.setBackground(Theme.CREAM_SURFACE);
         button.setForeground(Theme.SLATE_MUTED);
         button.setFont(FontLoader.getInterMedium(14f));
         button.setBorder(BorderFactory.createEmptyBorder(12, 24, 12, 24));
     }
 
-    private void highlightButton(JButton button) {
+    private void highlightButton(JButton button, ImageIcon activeIcon) {
+        button.setIcon(activeIcon);
         button.setBackground(Theme.CREAM_BASE);
         button.setForeground(Theme.FOREST_DEEP);
         button.setFont(FontLoader.getInter(14f, Font.BOLD));
-        // Draw 4px thick green border indicator on the right of the active button, matching Tailwind border-r-4
+        // Draw 4px thick green border indicator on the right of the active button
         button.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createMatteBorder(0, 0, 0, 4, Theme.FOREST_DEEP),
             new EmptyBorder(12, 24, 12, 20)

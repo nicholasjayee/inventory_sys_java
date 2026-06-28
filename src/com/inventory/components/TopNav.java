@@ -59,8 +59,8 @@ public class TopNav extends JPanel {
         JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 12));
         rightPanel.setOpaque(false);
 
-        // Search Pill Wrapper
-        JPanel searchPill = new JPanel(new BorderLayout(6, 0)) {
+        // Search Pill Wrapper (w-64 equivalent)
+        JPanel searchPill = new JPanel(new BorderLayout(8, 0)) {
             @Override
             protected void paintComponent(Graphics g) {
                 super.paintComponent(g);
@@ -74,13 +74,14 @@ public class TopNav extends JPanel {
             }
         };
         searchPill.setOpaque(false);
-        searchPill.setPreferredSize(new Dimension(200, 32));
-        searchPill.setBorder(new EmptyBorder(2, 12, 2, 12));
+        searchPill.setPreferredSize(new Dimension(220, 36)); // Exact mockup width & height
+        searchPill.setBorder(new EmptyBorder(4, 12, 4, 12));
 
-        // Mag Glass Icon label
-        JLabel searchIcon = new JLabel("🔍");
-        searchIcon.setFont(FontLoader.getInter(11f, Font.PLAIN));
-        searchIcon.setForeground(Theme.SLATE_MUTED);
+        // Load the downloaded search icon
+        ImageIcon searchIcon = new ImageIcon("assets/icons/search_muted.png");
+        // Scale to 16x16 to fit beautifully in the search pill
+        Image scaledSearch = searchIcon.getImage().getScaledInstance(16, 16, Image.SCALE_SMOOTH);
+        JLabel searchIconLabel = new JLabel(new ImageIcon(scaledSearch));
         
         JTextField searchInput = new JTextField("Search items...");
         searchInput.setFont(FontLoader.getInter(12f, Font.PLAIN));
@@ -88,7 +89,7 @@ public class TopNav extends JPanel {
         searchInput.setBorder(null);
         searchInput.setOpaque(false);
 
-        searchPill.add(searchIcon, BorderLayout.WEST);
+        searchPill.add(searchIconLabel, BorderLayout.WEST);
         searchPill.add(searchInput, BorderLayout.CENTER);
 
         // Sign Out text link

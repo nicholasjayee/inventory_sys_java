@@ -412,8 +412,14 @@ public class RawItemsPage extends Page {
 
         JButton editBtn = new JButton("Details");
         Theme.styleSecondaryButton(editBtn);
-        editBtn.setPreferredSize(new Dimension(80, 26));
+        editBtn.setPreferredSize(new Dimension(92, 26));
         editBtn.setFont(FontLoader.getInterSemiBold(10f));
+        try {
+            ImageIcon editIcon = new ImageIcon("assets/icons/edit.png");
+            Image scaled = editIcon.getImage().getScaledInstance(12, 12, Image.SCALE_SMOOTH);
+            editBtn.setIcon(new ImageIcon(scaled));
+            editBtn.setIconTextGap(4);
+        } catch (Exception e) {}
         editBtn.addActionListener(e -> showEditItemDialog(item));
 
         footerRow.add(originLabel, BorderLayout.WEST);

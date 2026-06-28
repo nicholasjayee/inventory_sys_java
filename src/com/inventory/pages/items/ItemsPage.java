@@ -535,8 +535,14 @@ public class ItemsPage extends Page {
 
                 JButton editBtn = new JButton("Edit");
                 Theme.styleSecondaryButton(editBtn);
-                editBtn.setPreferredSize(new Dimension(64, 26));
+                editBtn.setPreferredSize(new Dimension(76, 26));
                 editBtn.setFont(FontLoader.getInterSemiBold(11f));
+                try {
+                    ImageIcon editIcon = new ImageIcon("assets/icons/edit.png");
+                    Image scaled = editIcon.getImage().getScaledInstance(12, 12, Image.SCALE_SMOOTH);
+                    editBtn.setIcon(new ImageIcon(scaled));
+                    editBtn.setIconTextGap(4);
+                } catch (Exception e) {}
                 editBtn.addActionListener(e -> {
                     fireEditingStopped();
                     showEditItemDialog(currentItem);
@@ -545,8 +551,14 @@ public class ItemsPage extends Page {
                 JButton deleteBtn = new JButton("Delete");
                 Theme.styleSecondaryButton(deleteBtn);
                 deleteBtn.setForeground(Theme.ERROR_FG);
-                deleteBtn.setPreferredSize(new Dimension(72, 26));
+                deleteBtn.setPreferredSize(new Dimension(84, 26));
                 deleteBtn.setFont(FontLoader.getInterSemiBold(11f));
+                try {
+                    ImageIcon deleteIcon = new ImageIcon("assets/icons/delete.png");
+                    Image scaled = deleteIcon.getImage().getScaledInstance(12, 12, Image.SCALE_SMOOTH);
+                    deleteBtn.setIcon(new ImageIcon(scaled));
+                    deleteBtn.setIconTextGap(4);
+                } catch (Exception e) {}
                 deleteBtn.addActionListener(e -> {
                     fireEditingStopped();
                     handleDeleteItem(currentItem);
