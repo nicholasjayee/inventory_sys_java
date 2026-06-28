@@ -1,78 +1,118 @@
 package com.inventory.components;
 
-import com.inventory.models.User;
 import com.inventory.router.Router;
 import com.inventory.state.AppState;
-import java.awt.BorderLayout;
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.RenderingHints;
+import java.awt.*;
 import java.awt.geom.Ellipse2D;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
+import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 
 public class TopNav extends JPanel {
     private final Router router;
-    private JLabel titleLabel;
-    private JLabel userProfileLabel;
-    private JLabel dateLabel;
+    
+    // Center Links
+    private JButton homeBtn;
+    private JButton itemsBtn;
+    private JButton inventoryBtn;
+
+    // Right profile
     private JPanel avatarPanel;
+    private JButton signOutBtn;
 
     private static final String AVATAR_URL = "https://lh3.googleusercontent.com/aida-public/AB6AXuBepq3TakdiZCToUb9WGm50y_IVi73Hbvoc4rCYQxGtPE49nL6hlySKReoEc4NCT5qmKQ7syaktBBv9x48mC-O_1tVouNhOJlhobWc4xFF_6TuUIwy5y7jUDz619uAZogZKgN9ucbJxKS5brYwNx4jv0XrSyx2jTpoK9OH30NKs80SjrcaPgHjZ3HHlfe4m_9135rCZr3bJcUNB50UAyP2MsYDXugnizLH2zNgZmQuMrMnJYR-GSnp1QLR10OZDQkNIQN4zQUFQIGe1";
 
     public TopNav(Router router) {
         this.router = router;
         initializeUI();
-        
-        // Listen to global app state to update user profiles
-        AppState.getInstance().addListener(state -> updateProfile(state.getCurrentUser()));
     }
 
     private void initializeUI() {
-        setPreferredSize(new Dimension(800, 60));
-        setBackground(Theme.WHITE);
+        setPreferredSize(new Dimension(800, 64)); // h-16
+        setBackground(Theme.CREAM_BASE);
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Theme.BORDER_SUBTLE));
         setLayout(new BorderLayout());
         setBorder(BorderFactory.createCompoundBorder(
             getBorder(),
-            new EmptyBorder(10, 24, 10, 24)
+            new EmptyBorder(0, 24, 0, 24)
         ));
 
-        // Left: Page Title / Breadcrumb
-        titleLabel = new JLabel("System Console");
-        titleLabel.setFont(FontLoader.getInterSemiBold(15f));
-        titleLabel.setForeground(Theme.FOREST_DEEP);
-        add(titleLabel, BorderLayout.WEST);
+        // --- 1. Left branding ---
+        JLabel brandLabel = new JLabel("Aramweer Organic Skin Care");
+        brandLabel.setFont(FontLoader.getMerriweather(16f, Font.BOLD));
+        brandLabel.setForeground(Theme.FOREST_DEEP);
+        add(brandLabel, BorderLayout.WEST);
 
-        // Right: Date & User Profile Info
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+        // --- 2. Center Nav Links (Home, Items, Inventory) ---
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 32, 14));
+        centerPanel.setOpaque(false);
+
+        homeBtn = createNavLink("Home", "/dashboard");
+        itemsBtn = createNavLink("Items", "/items");
+        inventoryBtn = createNavLink("Inventory", "/raw-items");
+
+        centerPanel.add(homeBtn);
+        centerPanel.add(itemsBtn);
+        centerPanel.add(inventoryBtn);
+        add(centerPanel, BorderLayout.CENTER);
+
+        // --- 3. Right Actions (Search Pill + Sign out + Avatar) ---
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 12));
         rightPanel.setOpaque(false);
 
-        // Date Display
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMM d, yyyy");
-        dateLabel = new JLabel(sdf.format(new Date()));
-        dateLabel.setFont(FontLoader.getInter(12f, Font.PLAIN));
-        dateLabel.setForeground(Theme.SLATE_MUTED);
+        // Search Pill Wrapper
+        JPanel searchPill = new JPanel(new BorderLayout(6, 0)) {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2 = (Graphics2D) g.create();
+                g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                g2.setColor(Theme.CREAM_SURFACE);
+                g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 32, 32);
+                g2.setColor(Theme.BORDER_SUBTLE);
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 32, 32);
+                g2.dispose();
+            }
+        };
+        searchPill.setOpaque(false);
+        searchPill.setPreferredSize(new Dimension(200, 32));
+        searchPill.setBorder(new EmptyBorder(2, 12, 2, 12));
 
-        // Vertical divider
-        JLabel divider = new JLabel("|");
-        divider.setForeground(Theme.BORDER_SUBTLE);
+        // Mag Glass Icon label
+        JLabel searchIcon = new JLabel("🔍");
+        searchIcon.setFont(FontLoader.getInter(11f, Font.PLAIN));
+        searchIcon.setForeground(Theme.SLATE_MUTED);
+        
+        JTextField searchInput = new JTextField("Search items...");
+        searchInput.setFont(FontLoader.getInter(12f, Font.PLAIN));
+        searchInput.setForeground(Theme.SLATE_MUTED);
+        searchInput.setBorder(null);
+        searchInput.setOpaque(false);
 
-        // User profile text
-        userProfileLabel = new JLabel("Guest");
-        userProfileLabel.setFont(FontLoader.getInterMedium(13f));
-        userProfileLabel.setForeground(Theme.SLATE_TEXT);
+        searchPill.add(searchIcon, BorderLayout.WEST);
+        searchPill.add(searchInput, BorderLayout.CENTER);
 
-        // Round Avatar Image Panel loaded asynchronously
+        // Sign Out text link
+        signOutBtn = new JButton("SIGN OUT");
+        signOutBtn.setFont(FontLoader.getInterSemiBold(11f));
+        signOutBtn.setForeground(Theme.SLATE_MUTED);
+        signOutBtn.setBorder(null);
+        signOutBtn.setOpaque(false);
+        signOutBtn.setContentAreaFilled(false);
+        signOutBtn.setFocusPainted(false);
+        signOutBtn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        signOutBtn.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                signOutBtn.setForeground(Theme.ERROR_FG);
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                signOutBtn.setForeground(Theme.SLATE_MUTED);
+            }
+        });
+        signOutBtn.addActionListener(e -> handleSignOut());
+
+        // Profile Avatar
         avatarPanel = new JPanel() {
             @Override
             protected void paintComponent(Graphics g) {
@@ -83,18 +123,17 @@ public class TopNav extends JPanel {
                 int w = getWidth();
                 int h = getHeight();
                 
-                // Draw white background
+                // Draw circle background
                 g2.setColor(Color.WHITE);
                 g2.fill(new Ellipse2D.Double(0, 0, w - 1, h - 1));
                 
-                // Draw rounded image
-                ImageIcon icon = ImageLoader.getOrLoadImage("user_avatar", AVATAR_URL, this, w, h);
+                // Load avatar image
+                ImageIcon icon = ImageLoader.getOrLoadImage("topnav_user_avatar", AVATAR_URL, this, w, h);
                 if (icon != null) {
                     g2.setClip(new Ellipse2D.Double(0, 0, w, h));
                     g2.drawImage(icon.getImage(), 0, 0, w, h, null);
                 }
                 
-                // Outline border
                 g2.setClip(null);
                 g2.setColor(Theme.BORDER_SUBTLE);
                 g2.draw(new Ellipse2D.Double(0, 0, w - 1, h - 1));
@@ -104,31 +143,80 @@ public class TopNav extends JPanel {
         avatarPanel.setPreferredSize(new Dimension(32, 32));
         avatarPanel.setOpaque(false);
 
-        rightPanel.add(dateLabel);
-        rightPanel.add(divider);
-        rightPanel.add(userProfileLabel);
+        rightPanel.add(searchPill);
+        rightPanel.add(signOutBtn);
         rightPanel.add(avatarPanel);
         add(rightPanel, BorderLayout.EAST);
     }
 
+    private JButton createNavLink(String text, String route) {
+        JButton btn = new JButton(text);
+        btn.setFont(FontLoader.getInterMedium(13f));
+        btn.setForeground(Theme.SLATE_MUTED);
+        btn.setBorder(new EmptyBorder(0, 0, 4, 0));
+        btn.setOpaque(false);
+        btn.setContentAreaFilled(false);
+        btn.setFocusPainted(false);
+        btn.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        btn.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                if (btn.getForeground() != Theme.FOREST_DEEP) {
+                    btn.setForeground(Theme.FOREST_LEAF);
+                }
+            }
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                if (btn.getForeground() != Theme.FOREST_DEEP) {
+                    btn.setForeground(Theme.SLATE_MUTED);
+                }
+            }
+        });
+
+        btn.addActionListener(e -> router.navigate(route));
+        return btn;
+    }
+
     public void setPageTitle(String path) {
+        // Reset link selections
+        resetNavLink(homeBtn);
+        resetNavLink(itemsBtn);
+        resetNavLink(inventoryBtn);
+
         if ("/dashboard".equals(path)) {
-            titleLabel.setText("Operations Dashboard");
+            highlightNavLink(homeBtn);
         } else if ("/items".equals(path)) {
-            titleLabel.setText("Items Library & Control");
+            highlightNavLink(itemsBtn);
         } else if ("/raw-items".equals(path)) {
-            titleLabel.setText("Raw Ingredients Library");
-        } else {
-            titleLabel.setText("Management Suite");
+            highlightNavLink(inventoryBtn);
         }
     }
 
-    private void updateProfile(User user) {
-        if (user != null) {
-            userProfileLabel.setText(user.getDisplayName() + " (" + user.getRole() + ")");
-            avatarPanel.repaint();
-        } else {
-            userProfileLabel.setText("Guest");
+    private void resetNavLink(JButton btn) {
+        btn.setForeground(Theme.SLATE_MUTED);
+        btn.setFont(FontLoader.getInterMedium(13f));
+        btn.setBorder(new EmptyBorder(0, 0, 4, 0));
+    }
+
+    private void highlightNavLink(JButton btn) {
+        btn.setForeground(Theme.FOREST_DEEP);
+        btn.setFont(FontLoader.getInterSemiBold(13f));
+        // Underline matching HTML border-b-2
+        btn.setBorder(BorderFactory.createMatteBorder(0, 0, 2, 0, Theme.FOREST_DEEP));
+    }
+
+    private void handleSignOut() {
+        int confirm = JOptionPane.showConfirmDialog(
+            this,
+            "Are you sure you want to sign out?",
+            "Sign Out Confirmation",
+            JOptionPane.YES_NO_OPTION,
+            JOptionPane.QUESTION_MESSAGE
+        );
+        if (confirm == JOptionPane.YES_OPTION) {
+            AppState.getInstance().setCurrentUser(null);
+            router.navigate("/login");
         }
     }
 }
