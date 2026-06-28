@@ -7,18 +7,15 @@ This End User License Agreement ("EULA") is a legal agreement between you (eithe
 By installing, copying, or otherwise using the Software, you agree to be bound by the terms of this EULA. If you do not agree to the terms of this EULA, do not install or use the Software.
 
 ### 1. GRANT OF LICENSE
-Subject to your continuous compliance with this EULA and payment of the applicable license fees, Licensor grants you a limited, non-exclusive, non-transferable, and non-assignable license to install and use the Software on devices owned or controlled by the Licensee, strictly for your internal business operations.
+Subject to your continuous compliance with this EULA and payment of the applicable license fees, Licensor grants you a non-exclusive, perpetual license to install, use, modify, and compile the Software and its underlying Source Code strictly for your internal business operations or internal projects.
 
-### 2. INTELLECTUAL PROPERTY RIGHTS
-All title, including but not limited to copyrights, in and to the Software and any copies thereof are owned by the Licensor. All rights not expressly granted are reserved by the Licensor. You acknowledge that no title to the intellectual property in the Software is transferred to you.
+### 2. SOURCE CODE RIGHTS & INTELLECTUAL PROPERTY
+You are granted full access to the source code. You may modify, adapt, and build upon the source code to suit your specific business requirements. However, original title and copyright of the unmodified base Software remain with the Licensor. 
 
 ### 3. RESTRICTIONS
 You shall not:
-* Copy, duplicate, or distribute the Software, except as strictly necessary for backup or archival purposes.
-* Reverse engineer, decompile, or disassemble the Software.
-* Sell, rent, lease, lend, redistribute, or sub-license the Software.
-* Modify or create derivative works based upon the Software.
-* Remove any proprietary notices or labels on the Software.
+* Resell, rent, lease, or publicly distribute the Software or Source Code in its raw or compiled form as a competing commercial product.
+* Sub-license the source code to third-party entities outside of your organization.
 
 ### 4. TERMINATION
 Without prejudice to any other rights, Licensor may terminate this EULA if you fail to comply with the terms and conditions herein. In such event, you must immediately destroy all copies of the Software in your possession.

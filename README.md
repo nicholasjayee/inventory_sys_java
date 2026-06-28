@@ -39,8 +39,8 @@ To immediately build and launch the application on MacOS or Linux:
 * **Company**: code8
 
 ## 📄 License
-**Proprietary and Confidential**
+**Commercial Source Code License**
 
-All rights reserved. This software and associated documentation files are the proprietary property of **Ssekabira Nicholas / code8**. 
+This software and its associated source code are the proprietary intellectual property of **Ssekabira Nicholas / code8**. 
 
-Unauthorized copying, distribution, modification, or use of this software, via any medium, is strictly prohibited without explicit prior written consent from the author.
+Licensed purchasers are granted full rights to view, modify, and recompile the source code for their internal business operations. Public distribution, open-sourcing, or reselling of the source code as a standalone product is strictly prohibited. See the `LICENSE` and `EULA.md` files for full legal details.
