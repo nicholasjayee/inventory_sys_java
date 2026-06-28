@@ -52,13 +52,11 @@ public class Sidebar extends JPanel {
             return null;
         }
     }
-
     private void initializeUI() {
-        setPreferredSize(new Dimension(280, 720));
+        setPreferredSize(new Dimension(240, 720));
         setBackground(Theme.CREAM_SURFACE);
         setBorder(BorderFactory.createMatteBorder(0, 0, 0, 1, Theme.BORDER_SUBTLE));
         setLayout(new BorderLayout());
-
         // Top Brand Logo Section (Matches mockup exactly)
         JPanel brandPanel = new JPanel();
         brandPanel.setOpaque(false);
@@ -124,8 +122,8 @@ public class Sidebar extends JPanel {
         Theme.styleSecondaryButton(signOutBtn);
         signOutBtn.setForeground(Theme.ERROR_FG);
         signOutBtn.setFont(FontLoader.getInterSemiBold(11f));
-        signOutBtn.setMaximumSize(new Dimension(232, 32));
-        signOutBtn.setPreferredSize(new Dimension(232, 32));
+        signOutBtn.setMaximumSize(new Dimension(192, 32));
+        signOutBtn.setPreferredSize(new Dimension(192, 32));
         signOutBtn.setAlignmentX(LEFT_ALIGNMENT);
         signOutBtn.addActionListener(e -> handleSignOut());
 
@@ -149,8 +147,8 @@ public class Sidebar extends JPanel {
         button.setOpaque(true);
         button.setContentAreaFilled(true);
         button.setBorder(BorderFactory.createEmptyBorder(12, 24, 12, 24));
-        button.setMaximumSize(new Dimension(280, 44));
-        button.setPreferredSize(new Dimension(280, 44));
+        button.setMaximumSize(new Dimension(240, 44));
+        button.setPreferredSize(new Dimension(240, 44));
         button.setAlignmentX(LEFT_ALIGNMENT);
         button.setHorizontalAlignment(SwingConstants.LEFT);
         
