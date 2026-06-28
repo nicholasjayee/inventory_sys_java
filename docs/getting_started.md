@@ -44,6 +44,20 @@ This will compile the Java compiler targets and run the [DatabaseManager](file:/
 
 ---
 
+## 🌍 Localization & Seeding Data
+
+By default, the application is configured for East African operations (Kenyan Shillings - KES). 
+
+You can alter the global currency and branding instantly by editing:
+`metadata/app.properties`
+
+If you are initializing the database for the first time, you can auto-populate it with sample East African botanical ingredients (e.g., Macadamia Nut Oil, Baobab powder) by running the Python seeder utility:
+```bash
+python3 tools/seed_items.py
+```
+
+---
+
 ## 🚀 Running the Application
 
 To compile all files and launch the graphical interface:

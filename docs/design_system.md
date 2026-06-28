@@ -57,3 +57,18 @@ To keep design styles centralized, developers must style Swing components using 
 
 ### 3. Reusable Card Panel ([CardPanel.java](file:///home/code8/Desktop/inventory/src/com/inventory/components/CardPanel.java))
 * Inherits from `JPanel` but overrides `paintComponent` to draw an anti-aliased rounded rectangle (`8px` corner radius) filled with the `Cream-Surface` color, outline bordered by `Border-Subtle`.
+
+---
+
+## 💫 UI Physics & Animations
+
+To make the desktop application feel as smooth and modern as a web application, we utilize native Swing overrides:
+
+### 1. Skeleton Loading Shimmer
+* Located in `SkeletonPanel.java`, this component uses a native `javax.swing.Timer` to animate a `LinearGradientPaint` back and forth at 60fps. Drop this component anywhere data or images are loading to give users a premium tactile response.
+
+### 2. Smooth Scrolling & Scrollbars
+* We leverage FlatLaf's scroll engine to enable global native smooth scrolling:
+  `UIManager.put("ScrollPane.smoothScrolling", true);`
+* Ugly native desktop scrollbar tracks and buttons are completely stripped and replaced by beautiful, auto-hiding Mac/iOS style rounded pills:
+  `UIManager.put("ScrollBar.thumbArc", 999);`
