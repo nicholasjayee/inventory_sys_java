@@ -25,6 +25,10 @@ public class ProductBentoCard extends CardPanel {
         IMAGE_URLS.put("beeswax", "assets/images/beeswax.jpg");
         IMAGE_URLS.put("serum", "assets/images/serum.jpg");
         IMAGE_URLS.put("cream", "assets/images/cream.jpg");
+        IMAGE_URLS.put("macadamia", "assets/images/macadamia.jpg");
+        IMAGE_URLS.put("eucalyptus", "assets/images/eucalyptus.jpg");
+        IMAGE_URLS.put("baobab", "assets/images/baobab.jpg");
+        IMAGE_URLS.put("moringa", "assets/images/moringa.jpg");
     }
 
     public ProductBentoCard(Item item, Consumer<Item> onEdit, Consumer<Item> onDeleteConfirm) {

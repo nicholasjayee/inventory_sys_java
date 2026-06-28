@@ -48,6 +48,10 @@ public class RawItemsPage extends Page {
         IMAGE_URLS.put("argan", "assets/images/argan.jpg");
         IMAGE_URLS.put("kelp", "assets/images/kelp.jpg");
         IMAGE_URLS.put("beeswax", "assets/images/beeswax.jpg");
+        IMAGE_URLS.put("macadamia", "assets/images/macadamia.jpg");
+        IMAGE_URLS.put("eucalyptus", "assets/images/eucalyptus.jpg");
+        IMAGE_URLS.put("baobab", "assets/images/baobab.jpg");
+        IMAGE_URLS.put("moringa", "assets/images/moringa.jpg");
     }
 
     private List<Item> rawItems;
