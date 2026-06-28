@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Login | Aramweer Organic Skin Care</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "slate-muted": "#64748B",
+                    "cream-base": "#FDFBF7",
+                    "tertiary-fixed-dim": "#b7c8e1",
+                    "secondary-fixed-dim": "#c8c6c3",
+                    "border-subtle": "#E2E8F0",
+                    "tertiary-container": "#27374b",
+                    "surface": "#f9f9ff",
+                    "surface-bright": "#f9f9ff",
+                    "background": "#f9f9ff",
+                    "tertiary-fixed": "#d3e4fe",
+                    "outline": "#717976",
+                    "on-primary-fixed": "#00201a",
+                    "on-tertiary": "#ffffff",
+                    "inverse-surface": "#263143",
+                    "outline-variant": "#c1c8c4",
+                    "forest-leaf": "#2D5A4E",
+                    "primary-fixed-dim": "#aacec3",
+                    "secondary-container": "#e1dfdc",
+                    "surface-container-highest": "#d8e3fb",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#636360",
+                    "on-primary": "#ffffff",
+                    "on-tertiary-fixed": "#0b1c30",
+                    "error": "#ba1a1a",
+                    "surface-dim": "#cfdaf2",
+                    "on-surface": "#111c2d",
+                    "primary-fixed": "#c5eadf",
+                    "tertiary": "#112235",
+                    "primary": "#01261f",
+                    "surface-container-high": "#dee8ff",
+                    "surface-tint": "#43655c",
+                    "on-primary-container": "#83a69c",
+                    "on-background": "#111c2d",
+                    "on-secondary": "#ffffff",
+                    "on-error": "#ffffff",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#38485d",
+                    "secondary": "#5e5e5c",
+                    "error-container": "#ffdad6",
+                    "slate-text": "#334155",
+                    "surface-container-low": "#f0f3ff",
+                    "secondary-fixed": "#e4e2de",
+                    "surface-container": "#e7eeff",
+                    "on-secondary-fixed": "#1b1c1a",
+                    "primary-container": "#1a3c34",
+                    "on-tertiary-container": "#90a0b9",
+                    "inverse-on-surface": "#ecf1ff",
+                    "on-primary-fixed-variant": "#2b4d44",
+                    "forest-deep": "#1A3C34",
+                    "cream-surface": "#F5F2ED",
+                    "inverse-primary": "#aacec3",
+                    "on-secondary-fixed-variant": "#474744",
+                    "on-surface-variant": "#414846",
+                    "surface-variant": "#d8e3fb"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "section-gap": "48px",
+                    "gutter": "24px",
+                    "container-padding": "32px",
+                    "element-gap-sm": "8px",
+                    "unit": "4px",
+                    "element-gap-md": "16px"
+            },
+            "fontFamily": {
+                    "headline-lg": ["Merriweather"],
+                    "body-md": ["Inter"],
+                    "headline-md": ["Merriweather"],
+                    "body-lg": ["Inter"],
+                    "headline-sm": ["Merriweather"],
+                    "label-sm": ["Inter"],
+                    "label-caps": ["Inter"],
+                    "data-tabular": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                    "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                    "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                    "label-sm": ["11px", {"lineHeight": "1", "fontWeight": "500"}],
+                    "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "data-tabular": ["13px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        body {
+            background-color: #FDFBF7;
+            font-family: 'Inter', sans-serif;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom micro-interactions */
+        .premium-input:focus-within {
+            box-shadow: 0 0 0 2px rgba(45, 90, 78, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-cream-base min-h-screen flex items-center justify-center p-gutter relative overflow-hidden">
+<!-- Background Decor -->
+<div class="absolute inset-0 pointer-events-none opacity-40 overflow-hidden">
+<div class="absolute -top-24 -left-24 w-96 h-96 rounded-full bg-primary-fixed-dim mix-blend-multiply filter blur-3xl opacity-30 animate-pulse"></div>
+<div class="absolute top-1/2 -right-48 w-[600px] h-[600px] rounded-full bg-secondary-fixed mix-blend-multiply filter blur-[120px] opacity-20"></div>
+</div>
+<!-- Login Container -->
+<main class="relative z-10 w-full max-w-[1100px] grid md:grid-cols-2 bg-cream-surface border border-border-subtle rounded-xl shadow-2xl overflow-hidden min-h-[640px]">
+<!-- Left Side: Visual/Branding -->
+<div class="hidden md:flex relative flex-col justify-between p-12 overflow-hidden bg-forest-deep text-cream-base">
+<div class="relative z-20">
+<h1 class="font-headline-md text-headline-md mb-2">Aramweer</h1>
+<p class="font-label-caps text-label-caps uppercase tracking-widest opacity-80">Organic Skin Care</p>
+</div>
+<div class="absolute inset-0 z-10">
+<img class="w-full h-full object-cover opacity-60" data-alt="A macro close-up of premium organic skincare ingredients including dried eucalyptus leaves and raw shea butter on a dark, textured stone surface. The lighting is low-key and dramatic, highlighting natural textures and a deep forest green color palette. The mood is sophisticated, earthly, and high-end luxury." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAiF8pIkAOm_VurNrNromOrggRyY2VwMrrmE6eHJyy4EMDZmpwg-hcCros4KIJZSpmkjAjMewGh7Mu4YISfucdFjm71I5NAzWNJ57bjN78wNf5U99wfyXnAl5NjHKGXI2eLJA3oYFaZ4_FhgiMy68knP7k7r_1Dc_ESLMIPqtTYLnY1yIq5O3NTQ7DlxVFlQylUedmqUmu506q5NYZiUYLDfE4ACvHsABD2PsdULmqaUuVa5KuKG0iOe1kPWUdLnDtuFXGOvC0QlVkg"/>
+</div>
+<div class="relative z-20 mt-auto">
+<blockquote class="italic font-headline-sm text-headline-sm mb-4 leading-relaxed">
+                    "Rooted in nature, refined by science."
+                </blockquote>
+<div class="flex items-center gap-4 opacity-70">
+<div class="h-[1px] w-12 bg-cream-base"></div>
+<span class="font-label-caps text-label-caps">Est. 1984</span>
+</div>
+</div>
+</div>
+<!-- Right Side: Form -->
+<div class="flex flex-col justify-center p-8 md:p-16 bg-cream-surface">
+<!-- Mobile Logo -->
+<div class="md:hidden mb-8 text-center">
+<h1 class="font-headline-md text-headline-md text-forest-deep">Aramweer</h1>
+<p class="font-label-caps text-label-caps text-forest-leaf opacity-80 uppercase tracking-widest">Organic Skin Care</p>
+</div>
+<div class="max-w-md w-full mx-auto">
+<header class="mb-10">
+<h2 class="font-headline-lg text-headline-lg text-forest-deep mb-2">Welcome back</h2>
+<p class="font-body-md text-body-md text-slate-muted">Please enter your details to access the inventory management suite.</p>
+</header>
+<form class="space-y-6" onsubmit="event.preventDefault();">
+<!-- User Name Field -->
+<div class="space-y-2">
+<label class="font-label-caps text-label-caps text-forest-deep block" for="username">User name</label>
+<div class="relative flex items-center group premium-input">
+<span class="material-symbols-outlined absolute left-4 text-slate-muted group-focus-within:text-forest-leaf transition-colors">person</span>
+<input class="w-full pl-12 pr-4 py-3 bg-cream-base border border-border-subtle rounded-lg font-body-md text-body-md focus:outline-none focus:border-forest-deep transition-all placeholder:text-slate-muted/50" id="username" name="username" placeholder="Enter your username" type="text"/>
+</div>
+</div>
+<!-- Password Field -->
+<div class="space-y-2">
+<div class="flex justify-between items-center">
+<label class="font-label-caps text-label-caps text-forest-deep block" for="password">Password</label>
+<a class="font-label-sm text-label-sm text-forest-leaf hover:underline" href="#">Forgot?</a>
+</div>
+<div class="relative flex items-center group premium-input">
+<span class="material-symbols-outlined absolute left-4 text-slate-muted group-focus-within:text-forest-leaf transition-colors">lock</span>
+<input class="w-full pl-12 pr-12 py-3 bg-cream-base border border-border-subtle rounded-lg font-body-md text-body-md focus:outline-none focus:border-forest-deep transition-all placeholder:text-slate-muted/50" id="password" name="password" placeholder="••••••••" type="password"/>
+<button class="absolute right-4 text-slate-muted hover:text-forest-deep transition-colors" type="button">
+<span class="material-symbols-outlined">visibility</span>
+</button>
+</div>
+</div>
+<!-- Remember Me -->
+<div class="flex items-center space-x-2">
+<input class="w-4 h-4 text-forest-leaf border-border-subtle rounded focus:ring-forest-leaf focus:ring-offset-cream-surface bg-cream-base" id="remember" type="checkbox"/>
+<label class="font-body-md text-body-md text-slate-text" for="remember">Remember me for 30 days</label>
+</div>
+<!-- Sign In Button -->
+<div class="pt-4">
+<button class="w-full py-4 bg-forest-deep text-white font-label-caps text-label-caps uppercase tracking-widest rounded-lg hover:bg-forest-leaf active:opacity-80 transition-all duration-200 shadow-lg shadow-forest-deep/10 flex items-center justify-center gap-2" type="submit">
+                            Sign in
+                            <span class="material-symbols-outlined text-[18px]">arrow_forward</span>
+</button>
+</div>
+</form>
+<footer class="mt-12 pt-8 border-t border-border-subtle text-center">
+<p class="font-body-md text-body-md text-slate-muted">
+                        Don't have an account? 
+                        <a class="text-forest-deep font-semibold hover:underline" href="#">Contact Administrator</a>
+</p>
+</footer>
+</div>
+</div>
+</main>
+<!-- Global Subtle Textures -->
+<div class="fixed inset-0 pointer-events-none opacity-[0.03] z-[100]" style="background-image: url('https://www.transparenttextures.com/patterns/natural-paper.png');"></div>
+<script>
+        // Simple micro-interactions for inputs
+        const inputs = document.querySelectorAll('input');
+        inputs.forEach(input => {
+            input.addEventListener('focus', () => {
+                input.parentElement.classList.add('scale-[1.01]');
+            });
+            input.addEventListener('blur', () => {
+                input.parentElement.classList.remove('scale-[1.01]');
+            });
+        });
+
+        // Toggle Password Visibility
+        const toggleBtn = document.querySelector('button[type="button"]');
+        const passInput = document.getElementById('password');
+        let visible = false;
+
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                visible = !visible;
+                passInput.type = visible ? 'text' : 'password';
+                toggleBtn.querySelector('span').textContent = visible ? 'visibility_off' : 'visibility';
+            });
+        }
+    </script>
+</body></html>

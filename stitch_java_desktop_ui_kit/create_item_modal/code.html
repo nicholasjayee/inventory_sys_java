@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Create Item - Aramweer Organic Skin Care</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        /* Custom scrollbar for inventory dashboard */
+        ::-webkit-scrollbar {
+            width: 6px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #FDFBF7;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #E2E8F0;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #1A3C34;
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "slate-muted": "#64748B",
+                      "cream-base": "#FDFBF7",
+                      "tertiary-fixed-dim": "#b7c8e1",
+                      "secondary-fixed-dim": "#c8c6c3",
+                      "border-subtle": "#E2E8F0",
+                      "tertiary-container": "#27374b",
+                      "surface": "#f9f9ff",
+                      "surface-bright": "#f9f9ff",
+                      "background": "#f9f9ff",
+                      "tertiary-fixed": "#d3e4fe",
+                      "outline": "#717976",
+                      "on-primary-fixed": "#00201a",
+                      "on-tertiary": "#ffffff",
+                      "inverse-surface": "#263143",
+                      "outline-variant": "#c1c8c4",
+                      "forest-leaf": "#2D5A4E",
+                      "primary-fixed-dim": "#aacec3",
+                      "secondary-container": "#e1dfdc",
+                      "surface-container-highest": "#d8e3fb",
+                      "surface-container-lowest": "#ffffff",
+                      "on-secondary-container": "#636360",
+                      "on-primary": "#ffffff",
+                      "on-tertiary-fixed": "#0b1c30",
+                      "error": "#ba1a1a",
+                      "surface-dim": "#cfdaf2",
+                      "on-surface": "#111c2d",
+                      "primary-fixed": "#c5eadf",
+                      "tertiary": "#112235",
+                      "primary": "#01261f",
+                      "surface-container-high": "#dee8ff",
+                      "surface-tint": "#43655c",
+                      "on-primary-container": "#83a69c",
+                      "on-background": "#111c2d",
+                      "on-secondary": "#ffffff",
+                      "on-error": "#ffffff",
+                      "on-error-container": "#93000a",
+                      "on-tertiary-fixed-variant": "#38485d",
+                      "secondary": "#5e5e5c",
+                      "error-container": "#ffdad6",
+                      "slate-text": "#334155",
+                      "surface-container-low": "#f0f3ff",
+                      "secondary-fixed": "#e4e2de",
+                      "surface-container": "#e7eeff",
+                      "on-secondary-fixed": "#1b1c1a",
+                      "primary-container": "#1a3c34",
+                      "on-tertiary-container": "#90a0b9",
+                      "inverse-on-surface": "#ecf1ff",
+                      "on-primary-fixed-variant": "#2b4d44",
+                      "forest-deep": "#1A3C34",
+                      "cream-surface": "#F5F2ED",
+                      "inverse-primary": "#aacec3",
+                      "on-secondary-fixed-variant": "#474744",
+                      "on-surface-variant": "#414846",
+                      "surface-variant": "#d8e3fb"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "section-gap": "48px",
+                      "gutter": "24px",
+                      "container-padding": "32px",
+                      "element-gap-sm": "8px",
+                      "unit": "4px",
+                      "element-gap-md": "16px"
+              },
+              "fontFamily": {
+                      "headline-lg": ["Merriweather"],
+                      "body-md": ["Inter"],
+                      "headline-md": ["Merriweather"],
+                      "body-lg": ["Inter"],
+                      "headline-sm": ["Merriweather"],
+                      "label-sm": ["Inter"],
+                      "label-caps": ["Inter"],
+                      "data-tabular": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                      "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                      "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                      "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                      "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                      "label-sm": ["11px", {"lineHeight": "1", "fontWeight": "500"}],
+                      "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                      "data-tabular": ["13px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}]
+              }
+            },
+          },
+        }
+      </script>
+</head>
+<body class="bg-cream-base text-forest-deep font-body-md selection:bg-forest-leaf/20">
+<!-- Dashboard Layout Wrapper -->
+<div class="flex min-h-screen">
+<!-- SideNavBar - Shared Component -->
+<aside class="fixed left-0 top-0 h-full flex flex-col p-element-gap-md border-r border-border-subtle bg-cream-surface w-[280px] z-10 transition-all duration-200 ease-in-out">
+<div class="mb-8 px-2">
+<h2 class="font-headline-sm text-headline-sm text-forest-deep">Inventory</h2>
+<p class="font-label-caps text-label-caps text-slate-muted mt-1">Management Suite</p>
+</div>
+<nav class="flex-1 space-y-1">
+<!-- Dashboard Active -->
+<a class="flex items-center gap-3 px-4 py-3 text-forest-deep font-bold border-r-4 border-forest-deep bg-cream-base/50 transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="dashboard">dashboard</span>
+<span class="font-body-lg text-body-lg">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-muted hover:bg-cream-base hover:text-forest-deep transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="eco">eco</span>
+<span class="font-body-lg text-body-lg">Raw Materials</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-muted hover:bg-cream-base hover:text-forest-deep transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="precision_manufacturing">precision_manufacturing</span>
+<span class="font-body-lg text-body-lg">Processed Goods</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-muted hover:bg-cream-base hover:text-forest-deep transition-all duration-200 ease-in-out" href="#">
+<span class="material-symbols-outlined" data-icon="inventory_2">inventory_2</span>
+<span class="font-body-lg text-body-lg">Archives</span>
+</a>
+</nav>
+<button class="mb-6 w-full py-3 bg-forest-deep text-white font-label-caps text-label-caps rounded-lg hover:bg-forest-leaf transition-colors duration-200 shadow-sm">
+                Create New Item
+            </button>
+<div class="pt-6 border-t border-border-subtle space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-slate-muted hover:text-forest-deep transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="settings">settings</span>
+<span class="font-body-lg text-body-lg">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-muted hover:text-forest-deep transition-all" href="#">
+<span class="material-symbols-outlined" data-icon="help">help</span>
+<span class="font-body-lg text-body-lg">Support</span>
+</a>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="ml-[280px] w-full flex flex-col min-h-screen">
+<!-- TopNavBar - Shared Component -->
+<header class="flex justify-between items-center px-gutter w-full h-16 max-w-[1440px] mx-auto border-b border-border-subtle bg-cream-base">
+<div class="font-headline-md text-headline-md text-forest-deep">
+                    Aramweer Organic Skin Care
+                </div>
+<div class="flex items-center gap-8">
+<nav class="hidden lg:flex items-center gap-6">
+<a class="font-body-md text-body-md text-forest-deep border-b-2 border-forest-deep pb-1 transition-colors" href="#">Home</a>
+<a class="font-body-md text-body-md text-slate-muted hover:text-forest-leaf transition-colors" href="#">Items</a>
+<a class="font-body-md text-body-md text-slate-muted hover:text-forest-leaf transition-colors" href="#">Inventory</a>
+</nav>
+<div class="flex items-center gap-4">
+<div class="relative">
+<span class="absolute left-3 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-muted text-[20px]" data-icon="search">search</span>
+<input class="pl-10 pr-4 py-1.5 rounded-full border border-border-subtle bg-cream-surface focus:outline-none focus:border-forest-deep focus:ring-1 focus:ring-forest-deep/10 text-body-md w-64 transition-all" placeholder="Search inventory..." type="text"/>
+</div>
+<button class="font-body-md text-body-md text-slate-muted hover:text-forest-leaf transition-colors">Sign out</button>
+<div class="w-8 h-8 rounded-full bg-forest-deep/10 overflow-hidden border border-border-subtle">
+<img class="w-full h-full object-cover" data-alt="Close up portrait of a professional operations manager in a minimalist studio setting. The lighting is soft and natural, emphasizing textures of cream and organic green tones. The aesthetic is clean, professional, and sophisticated, matching a luxury heritage brand identity." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDtIoLZIimEXl0qZ0mva-yiYn4s4E3Cron-Lzk2QNBI-bnMu_axKYPQUe4QoSMeOpiZnbfovkJ4xJ-0tKKiAQ_LyOOifuc8nBLv4QCSd2i6JfGZyrDqU1IrZoCE8HUPLFklSik9iGpcFK5e1JW6Yk6exxFfD3apDQ4MC5uEPU79DLux1stERbUUsDG6sXtFDqWh_UotNDPJsgyxAATnTgipynAhpzAiYw_tMzNRPEafzS_bF_Yg6Mak6wOAEyTlyMqdI52euqcLIDUA"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content (Background for Modal) -->
+<div class="p-container-padding max-w-[1440px] mx-auto w-full opacity-40 select-none pointer-events-none">
+<div class="flex justify-between items-end mb-8">
+<div>
+<h1 class="font-headline-lg text-headline-lg text-forest-deep">Inventory Dashboard</h1>
+<p class="font-body-lg text-body-lg text-slate-muted mt-2">Overview of raw materials and processed goods.</p>
+</div>
+<div class="flex gap-4">
+<div class="bg-cream-surface border border-border-subtle p-4 rounded-xl min-w-[180px]">
+<span class="font-label-caps text-label-caps text-slate-muted">Total SKU</span>
+<p class="font-headline-sm text-headline-sm mt-1">1,248</p>
+</div>
+<div class="bg-cream-surface border border-border-subtle p-4 rounded-xl min-w-[180px]">
+<span class="font-label-caps text-label-caps text-slate-muted">Low Stock</span>
+<p class="font-headline-sm text-headline-sm mt-1 text-error">12</p>
+</div>
+</div>
+</div>
+<!-- Bento Style Grid -->
+<div class="grid grid-cols-12 gap-6">
+<div class="col-span-8 bg-cream-surface border border-border-subtle rounded-xl p-6 h-[400px]">
+<div class="flex justify-between items-center mb-6">
+<h3 class="font-headline-sm text-headline-sm">Inventory Levels</h3>
+<div class="flex gap-2">
+<span class="w-3 h-3 bg-forest-deep rounded-full"></span>
+<span class="w-3 h-3 bg-forest-leaf rounded-full opacity-50"></span>
+</div>
+</div>
+<div class="w-full h-64 bg-cream-base border border-border-subtle rounded-lg flex items-center justify-center">
+<span class="font-label-caps text-slate-muted">Level Chart Placeholder</span>
+</div>
+</div>
+<div class="col-span-4 bg-cream-surface border border-border-subtle rounded-xl p-6 flex flex-col">
+<h3 class="font-headline-sm text-headline-sm mb-4">Quick Actions</h3>
+<div class="space-y-3">
+<div class="p-4 bg-cream-base border border-border-subtle rounded-lg flex items-center gap-3">
+<span class="material-symbols-outlined text-forest-leaf" data-icon="download">download</span>
+<span class="font-body-md font-bold">Export Inventory Report</span>
+</div>
+<div class="p-4 bg-cream-base border border-border-subtle rounded-lg flex items-center gap-3">
+<span class="material-symbols-outlined text-forest-leaf" data-icon="history">history</span>
+<span class="font-body-md font-bold">Recent Stock Audit</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+<!-- CREATE ITEM MODAL OVERLAY -->
+<div class="fixed inset-0 z-50 flex items-center justify-center p-4" id="create-item-modal">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-forest-deep/60 backdrop-blur-[2px] transition-opacity"></div>
+<!-- Modal Container -->
+<div class="relative bg-white w-full max-w-lg rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in duration-300">
+<!-- Modal Header -->
+<div class="p-container-padding pb-4">
+<div class="flex justify-between items-start">
+<div>
+<h2 class="font-headline-sm text-headline-sm text-forest-deep">Create item</h2>
+<p class="font-body-md text-body-md text-slate-muted mt-1">Add a new item to your inventory.</p>
+</div>
+<button class="text-slate-muted hover:text-forest-deep transition-colors p-1" onclick="console.log('Close Modal')">
+<span class="material-symbols-outlined" data-icon="close">close</span>
+</button>
+</div>
+</div>
+<!-- Modal Form -->
+<form class="p-container-padding pt-2 space-y-6">
+<!-- Item Name -->
+<div>
+<label class="block font-label-caps text-label-caps text-forest-deep mb-2">Item name</label>
+<input class="w-full bg-cream-base border border-border-subtle rounded-lg px-4 py-3 text-body-md focus:border-forest-deep focus:ring-2 focus:ring-forest-leaf/10 transition-all placeholder:text-slate-muted/60" placeholder="e.g. Organic Lavender Extract" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<!-- Quantity -->
+<div>
+<label class="block font-label-caps text-label-caps text-forest-deep mb-2">Quantity</label>
+<div class="relative">
+<input class="w-full bg-cream-base border border-border-subtle rounded-lg pl-4 pr-10 py-3 text-body-md focus:border-forest-deep focus:ring-2 focus:ring-forest-leaf/10 transition-all" type="number" value="0"/>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 font-label-sm text-slate-muted">units</span>
+</div>
+</div>
+<!-- Price -->
+<div>
+<label class="block font-label-caps text-label-caps text-forest-deep mb-2">Price</label>
+<div class="relative">
+<span class="absolute left-4 top-1/2 -translate-y-1/2 text-slate-muted font-body-md">$</span>
+<input class="w-full bg-cream-base border border-border-subtle rounded-lg pl-8 pr-4 py-3 text-body-md focus:border-forest-deep focus:ring-2 focus:ring-forest-leaf/10 transition-all" placeholder="0.00" type="text"/>
+</div>
+</div>
+</div>
+<!-- Category Dropdown -->
+<div>
+<label class="block font-label-caps text-label-caps text-forest-deep mb-2">Category</label>
+<div class="relative">
+<select class="w-full appearance-none bg-cream-base border border-border-subtle rounded-lg px-4 py-3 text-body-md focus:border-forest-deep focus:ring-2 focus:ring-forest-leaf/10 transition-all cursor-pointer">
+<option disabled="" selected="" value="">Select a category</option>
+<option value="raw">Raw Materials</option>
+<option value="processed">Processed Goods</option>
+</select>
+<span class="absolute right-4 top-1/2 -translate-y-1/2 material-symbols-outlined text-slate-muted pointer-events-none" data-icon="expand_more">expand_more</span>
+</div>
+</div>
+<!-- Item Visual Sample (Aesthetic Touch) -->
+<div class="p-4 bg-cream-surface rounded-lg border border-border-subtle flex items-center gap-4">
+<div class="w-12 h-12 rounded bg-white overflow-hidden flex-shrink-0">
+<img class="w-full h-full object-cover" data-alt="High quality macro photograph of raw botanical ingredients such as crushed dried lavender and golden botanical oil droplets. The image is bright, airy, and professional, using a shallow depth of field to emphasize organic textures and the luxury identity of the skincare brand." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAHqhT80QwBiOawV-B_lzTiEwW4XE5V6CMDvfMeJ-d0E-CIvTKVj0JeKNp8lcI6tSclrAfCOuR-ASbh-gQw0hb5ge49xmKsgR-uxBav6_QTx3-APaZcJMNOgIdrNVImdn-am5pnjJrRVNHh7fQXc7w7G8zi0TxsjSh42H_T-2xmR0gqMW_kiiumh0l2joPqpSBODX_nm239QW57ImIzdqe9MNfXaZIcbzSk5GRdgRyvH4cMZQDkpbdzlSUa7XpECpGB6GBUhrKno2uQ"/>
+</div>
+<p class="text-label-sm font-label-sm text-slate-muted italic leading-tight">
+                        "Each new item record ensures traceability and batch quality compliance across our organic supply chain."
+                    </p>
+</div>
+</form>
+<!-- Modal Footer Actions -->
+<div class="p-container-padding pt-4 pb-8 flex items-center justify-end gap-3 bg-cream-surface/30">
+<button class="px-6 py-2.5 font-label-caps text-label-caps text-forest-deep border border-forest-deep rounded-lg hover:bg-forest-deep hover:text-white transition-all duration-200">
+                    Cancel
+                </button>
+<button class="px-8 py-2.5 font-label-caps text-label-caps text-white bg-forest-deep border border-forest-deep rounded-lg hover:bg-forest-leaf transition-all duration-200 shadow-md active:scale-95">
+                    Create
+                </button>
+</div>
+</div>
+</div>
+<!-- Micro-interactions Script -->
+<script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const modal = document.getElementById('create-item-modal');
+            const cancelBtn = modal.querySelector('button:contains("Cancel")');
+            
+            // Simple logic for interactive feel
+            document.querySelectorAll('input, select').forEach(el => {
+                el.addEventListener('focus', () => {
+                    // Subtle interaction could go here
+                });
+            });
+
+            // ESC key to close (simulated)
+            window.addEventListener('keydown', (e) => {
+                if (e.key === 'Escape') {
+                    modal.classList.add('opacity-0', 'scale-95');
+                    setTimeout(() => modal.style.display = 'none', 200);
+                }
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Raw Items | Aramweer Organic Skin Care</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&amp;family=Inter:wght@400;500;600;700&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+        body {
+            background-color: #FDFBF7; /* cream-base */
+            font-family: 'Inter', sans-serif;
+        }
+        .bento-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 24px;
+        }
+        .item-card {
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+        }
+        .item-card:hover {
+            transform: translateY(-4px);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "slate-muted": "#64748B",
+                        "cream-base": "#FDFBF7",
+                        "tertiary-fixed-dim": "#b7c8e1",
+                        "secondary-fixed-dim": "#c8c6c3",
+                        "border-subtle": "#E2E8F0",
+                        "tertiary-container": "#27374b",
+                        "surface": "#f9f9ff",
+                        "surface-bright": "#f9f9ff",
+                        "background": "#f9f9ff",
+                        "tertiary-fixed": "#d3e4fe",
+                        "outline": "#717976",
+                        "on-primary-fixed": "#00201a",
+                        "on-tertiary": "#ffffff",
+                        "inverse-surface": "#263143",
+                        "outline-variant": "#c1c8c4",
+                        "forest-leaf": "#2D5A4E",
+                        "primary-fixed-dim": "#aacec3",
+                        "secondary-container": "#e1dfdc",
+                        "surface-container-highest": "#d8e3fb",
+                        "surface-container-lowest": "#ffffff",
+                        "on-secondary-container": "#636360",
+                        "on-primary": "#ffffff",
+                        "on-tertiary-fixed": "#0b1c30",
+                        "error": "#ba1a1a",
+                        "surface-dim": "#cfdaf2",
+                        "on-surface": "#111c2d",
+                        "primary-fixed": "#c5eadf",
+                        "tertiary": "#112235",
+                        "primary": "#01261f",
+                        "surface-container-high": "#dee8ff",
+                        "surface-tint": "#43655c",
+                        "on-primary-container": "#83a69c",
+                        "on-background": "#111c2d",
+                        "on-secondary": "#ffffff",
+                        "on-error": "#ffffff",
+                        "on-error-container": "#93000a",
+                        "on-tertiary-fixed-variant": "#38485d",
+                        "secondary": "#5e5e5c",
+                        "error-container": "#ffdad6",
+                        "slate-text": "#334155",
+                        "surface-container-low": "#f0f3ff",
+                        "secondary-fixed": "#e4e2de",
+                        "surface-container": "#e7eeff",
+                        "on-secondary-fixed": "#1b1c1a",
+                        "primary-container": "#1a3c34",
+                        "on-tertiary-container": "#90a0b9",
+                        "inverse-on-surface": "#ecf1ff",
+                        "on-primary-fixed-variant": "#2b4d44",
+                        "forest-deep": "#1A3C34",
+                        "cream-surface": "#F5F2ED",
+                        "inverse-primary": "#aacec3",
+                        "on-secondary-fixed-variant": "#474744",
+                        "on-surface-variant": "#414846",
+                        "surface-variant": "#d8e3fb"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "section-gap": "48px",
+                        "gutter": "24px",
+                        "container-padding": "32px",
+                        "element-gap-sm": "8px",
+                        "unit": "4px",
+                        "element-gap-md": "16px"
+                    },
+                    "fontFamily": {
+                        "headline-lg": ["Merriweather"],
+                        "body-md": ["Inter"],
+                        "headline-md": ["Merriweather"],
+                        "body-lg": ["Inter"],
+                        "headline-sm": ["Merriweather"],
+                        "label-sm": ["Inter"],
+                        "label-caps": ["Inter"],
+                        "data-tabular": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.02em", "fontWeight": "700"}],
+                        "body-md": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                        "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "700"}],
+                        "body-lg": ["16px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                        "headline-sm": ["20px", {"lineHeight": "1.4", "fontWeight": "700"}],
+                        "label-sm": ["11px", {"lineHeight": "1", "fontWeight": "500"}],
+                        "label-caps": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                        "data-tabular": ["13px", {"lineHeight": "1.4", "letterSpacing": "0.01em", "fontWeight": "500"}]
+                    }
+                },
+            },
+        }
+    </script>
+</head>
+<body class="bg-cream-base text-forest-deep min-h-screen flex flex-col">
+<!-- TopNavBar Execution -->
+<nav class="bg-cream-base border-b border-border-subtle sticky top-0 z-50">
+<div class="flex justify-between items-center px-gutter w-full h-16 max-w-[1440px] mx-auto">
+<div class="flex items-center gap-element-gap-md">
+<span class="font-headline-md text-headline-md text-forest-deep">Aramweer Organic Skin Care</span>
+</div>
+<div class="hidden md:flex items-center gap-8">
+<a class="text-slate-muted hover:text-forest-leaf transition-colors font-body-md text-body-md" href="#">Home</a>
+<a class="text-forest-deep border-b-2 border-forest-deep pb-1 font-body-md text-body-md" href="#">Items</a>
+<a class="text-slate-muted hover:text-forest-leaf transition-colors font-body-md text-body-md" href="#">Inventory</a>
+</div>
+<div class="flex items-center gap-element-gap-md">
+<div class="relative hidden sm:block">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-muted scale-90">search</span>
+<input class="bg-cream-base border border-border-subtle pl-10 pr-4 py-2 rounded-lg text-body-md focus:outline-none focus:border-forest-deep transition-all w-64" placeholder="Search raw materials..." type="text"/>
+</div>
+<button class="text-slate-muted hover:text-forest-deep transition-colors font-body-md text-body-md px-4">Sign out</button>
+<div class="w-8 h-8 rounded-full overflow-hidden border border-border-subtle">
+<img class="w-full h-full object-cover" data-alt="A professional studio portrait of a luxury brand manager with a serene expression, shot in soft natural light. The background is a blurred minimalist office with organic wooden textures and cream walls. The lighting is high-key and flattering, emphasizing a modern, clean, and professional skin-care industry aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAekFRoEn-DnxkmVBy4-T3Ak7DF4BKyMCpvJXGNTU5UqSyun2KsKd_2J07jzsk2gbaKBYXWod53bC1NLDaPJDtc6oOpD_BuJzEOft4lDyYFlzJstR002q4OK6tBC0Jj_rj2MaAQlvHPVLG4nY-CQabhOc4AkxpbEyy7MQ1CeEcUCLyNokszTUZ4vWCAr49wrZIsjKihvXtOo9-l33IvkhPOTvxlpXh4LtgO1ai9wQy7OwNGU-CKJ2vY14fatV0jZv51PfdgAZInBnVq"/>
+</div>
+</div>
+</div>
+</nav>
+<!-- Main Layout Container -->
+<div class="flex flex-1 max-w-[1440px] mx-auto w-full">
+<!-- SideNavBar Execution -->
+<aside class="hidden lg:flex w-[280px] flex-col p-element-gap-md border-r border-border-subtle bg-cream-surface sticky top-16 h-[calc(100vh-64px)]">
+<div class="mb-8">
+<div class="flex items-center gap-3 mb-2">
+<div class="bg-forest-deep p-2 rounded-lg text-cream-base">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">eco</span>
+</div>
+<div>
+<h2 class="font-headline-sm text-headline-sm text-forest-deep">Inventory</h2>
+<p class="text-slate-muted text-label-sm font-label-caps uppercase tracking-wider">Management Suite</p>
+</div>
+</div>
+</div>
+<nav class="flex-1 space-y-1">
+<a class="flex items-center gap-3 px-4 py-3 text-slate-muted hover:bg-cream-base hover:text-forest-deep transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-forest-deep">dashboard</span>
+<span class="font-body-lg text-body-lg">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-forest-deep font-bold border-r-4 border-forest-deep bg-cream-base/50 transition-all duration-200" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">eco</span>
+<span class="font-body-lg text-body-lg">Raw Materials</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-muted hover:bg-cream-base hover:text-forest-deep transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-forest-deep">precision_manufacturing</span>
+<span class="font-body-lg text-body-lg">Processed Goods</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-muted hover:bg-cream-base hover:text-forest-deep transition-all duration-200 group" href="#">
+<span class="material-symbols-outlined group-hover:text-forest-deep">inventory_2</span>
+<span class="font-body-lg text-body-lg">Archives</span>
+</a>
+</nav>
+<div class="pt-8 border-t border-border-subtle">
+<button class="w-full bg-forest-deep text-white py-3 rounded-lg font-label-caps text-label-caps hover:bg-forest-leaf transition-colors mb-6">
+                    Create New Item
+                </button>
+<div class="space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-slate-muted hover:text-forest-deep transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-body-md">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-muted hover:text-forest-deep transition-colors" href="#">
+<span class="material-symbols-outlined text-[20px]">help</span>
+<span class="text-body-md">Support</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Area -->
+<main class="flex-1 p-container-padding bg-cream-base">
+<!-- Header Section -->
+<header class="mb-section-gap">
+<div class="flex justify-between items-end">
+<div>
+<nav class="flex items-center gap-2 text-slate-muted text-label-sm font-label-caps mb-4">
+<span>Inventory</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span class="text-forest-leaf">Raw Items</span>
+</nav>
+<h1 class="font-headline-lg text-headline-lg text-forest-deep mb-2">Raw items</h1>
+<p class="text-slate-muted font-body-lg text-body-lg max-w-2xl">Botanical ingredients and unprocessed inputs sourced globally for artisan skincare production.</p>
+</div>
+<div class="flex gap-element-gap-md">
+<button class="flex items-center gap-2 border border-border-subtle px-4 py-2 bg-cream-surface hover:bg-white transition-colors rounded-lg text-body-md">
+<span class="material-symbols-outlined text-[18px]">filter_list</span>
+                            Filter
+                        </button>
+<button class="flex items-center gap-2 border border-border-subtle px-4 py-2 bg-cream-surface hover:bg-white transition-colors rounded-lg text-body-md">
+<span class="material-symbols-outlined text-[18px]">download</span>
+                            Export
+                        </button>
+</div>
+</div>
+</header>
+<!-- Status Quick Stats -->
+<div class="grid grid-cols-1 md:grid-cols-3 gap-gutter mb-8">
+<div class="bg-cream-surface border border-border-subtle p-gutter rounded-xl">
+<p class="text-label-caps font-label-caps text-slate-muted mb-1">Total Raw SKU</p>
+<h3 class="font-headline-md text-headline-md text-forest-deep">42</h3>
+</div>
+<div class="bg-cream-surface border border-border-subtle p-gutter rounded-xl">
+<p class="text-label-caps font-label-caps text-slate-muted mb-1">Low Stock Alerts</p>
+<h3 class="font-headline-md text-headline-md text-error">04</h3>
+</div>
+<div class="bg-cream-surface border border-border-subtle p-gutter rounded-xl">
+<p class="text-label-caps font-label-caps text-slate-muted mb-1">Pending Arrivals</p>
+<h3 class="font-headline-md text-headline-md text-forest-leaf">12</h3>
+</div>
+</div>
+<!-- Bento Grid of Raw Items -->
+<div class="bento-grid">
+<!-- Card 1: Shea Butter -->
+<div class="item-card bg-cream-surface border border-border-subtle rounded-xl overflow-hidden flex flex-col h-full group">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Macro photography of raw organic shea butter, showing its rich, creamy texture and pale ivory color. The lighting is soft and warm, highlighting the natural irregularities and pure essence of the ingredient. The aesthetic is clean, luxurious, and organic, consistent with high-end botanical skincare products." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCHBRoYKc0SBAInofThMZBrgxb3UuDv6K95qV0D1viI6QHybia87hjg4rEQE1-BgiKpZbQko0CiTlCw_A6gzGFfB4L-zVO6mmNURRvMV3DaNC3wTLQhUG4HBrOJvBzcSjHZD4b1V9dc_RdSgsNRBldu7Ex2gEpTOMk6dT2L7YE-TLtdJDrEXF_9PJ2DqWdRLhopM3CU57mVopw6bWP105s6oh5pCEirmmRmsAps_7lw9FQVSWvBW3Kdcmqq8ScOZ-P7J-l1Gg7icn0t"/>
+<span class="absolute top-3 right-3 bg-forest-leaf/10 text-forest-leaf text-label-caps px-3 py-1 rounded-full backdrop-blur-sm">In Stock</span>
+</div>
+<div class="p-element-gap-md flex flex-col flex-1">
+<div class="mb-4">
+<p class="text-label-sm font-label-caps text-slate-muted mb-1">SKU: RAW-SB-001</p>
+<h4 class="font-headline-sm text-headline-sm text-forest-deep">Unrefined Shea Butter</h4>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6 border-y border-border-subtle/50 py-4">
+<div>
+<p class="text-label-sm font-label-caps text-slate-muted">Current Stock</p>
+<p class="font-data-tabular text-data-tabular text-forest-deep">250 kg</p>
+</div>
+<div>
+<p class="text-label-sm font-label-caps text-slate-muted">Reorder Pt</p>
+<p class="font-data-tabular text-data-tabular text-forest-deep">50 kg</p>
+</div>
+</div>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-slate-muted text-body-md">Origin: Ghana</span>
+<button class="text-forest-deep hover:text-forest-leaf transition-colors font-label-caps text-label-caps underline underline-offset-4">Details</button>
+</div>
+</div>
+</div>
+<!-- Card 2: Lavender Oil -->
+<div class="item-card bg-cream-surface border border-border-subtle rounded-xl overflow-hidden flex flex-col h-full group">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Close-up of a small apothecary glass bottle filled with clear lavender essential oil, surrounded by dried lavender sprigs on a light linen surface. High-key, natural lighting creates a calm and therapeutic mood. The composition is minimalist and focuses on the purity of the botanical extract." src="https://lh3.googleusercontent.com/aida-public/AB6AXuAs-hZR63qnNR0cpgMedujl0AXcYB4iZX3cvXS2GtPbv2leWUVpUDFmnwKV-7VY1pQpBj8KLv73WX80qT1ewl1rmzwI7_8zUc53-bGHnvJ7TNgeXoTw-KU7yt6HOS22AWmlvPkeHm72Lhyk9NPu9mx4Or9pfTmR2UmJN5P8Au1MRJPZWzt1sYgFj4hE8chadoKOODcLySU9PB7mfF-DW24mmg39U9AoqVZvFOG6qsBXklj6T4npfA8qZjj90KltuJi4P8efFarbwX9b"/>
+<span class="absolute top-3 right-3 bg-error/10 text-error text-label-caps px-3 py-1 rounded-full backdrop-blur-sm">Low Stock</span>
+</div>
+<div class="p-element-gap-md flex flex-col flex-1">
+<div class="mb-4">
+<p class="text-label-sm font-label-caps text-slate-muted mb-1">SKU: RAW-LO-012</p>
+<h4 class="font-headline-sm text-headline-sm text-forest-deep">Pure Lavender Essential Oil</h4>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6 border-y border-border-subtle/50 py-4">
+<div>
+<p class="text-label-sm font-label-caps text-slate-muted">Current Stock</p>
+<p class="font-data-tabular text-data-tabular text-error">5 L</p>
+</div>
+<div>
+<p class="text-label-sm font-label-caps text-slate-muted">Reorder Pt</p>
+<p class="font-data-tabular text-data-tabular text-forest-deep">10 L</p>
+</div>
+</div>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-slate-muted text-body-md">Origin: France</span>
+<button class="text-forest-deep hover:text-forest-leaf transition-colors font-label-caps text-label-caps underline underline-offset-4">Details</button>
+</div>
+</div>
+</div>
+<!-- Card 3: Rosehip Seeds -->
+<div class="item-card bg-cream-surface border border-border-subtle rounded-xl overflow-hidden flex flex-col h-full group">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A top-down artistic arrangement of dried rosehip seeds on a textured cream surface. The seeds are small, reddish-brown, and captured with sharp detail to show their organic texture. The lighting is diffused and professional, evoking a sense of heritage and meticulous raw ingredient sourcing." src="https://lh3.googleusercontent.com/aida-public/AB6AXuD5wkhJQP4AqhFADaZgNyUugQ6MQUy7rAYxEG0j-z5yUvyG8DwwxPQq33ZjkIOUchsalKUbth2UZ1gWxF5SlI5wANd8GPIDg-tzaJv9odrxKfGnS35-lLGnuT9Z-fNdKyEeDzvspRhhnt1DSHCeFSDtRe6Eg4n2m7ylusTBwPxom5Wqvql7GEwGpRCglWeD-BXghwEMXQa821Jx1-nX-vpPbfZW5NIXj3fEtatCVuRQXxKsBUOEvxsge6HDycjfsuWMSqR9n_vfG80O"/>
+<span class="absolute top-3 right-3 bg-forest-leaf/10 text-forest-leaf text-label-caps px-3 py-1 rounded-full backdrop-blur-sm">In Stock</span>
+</div>
+<div class="p-element-gap-md flex flex-col flex-1">
+<div class="mb-4">
+<p class="text-label-sm font-label-caps text-slate-muted mb-1">SKU: RAW-RS-009</p>
+<h4 class="font-headline-sm text-headline-sm text-forest-deep">Organic Rosehip Seeds</h4>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6 border-y border-border-subtle/50 py-4">
+<div>
+<p class="text-label-sm font-label-caps text-slate-muted">Current Stock</p>
+<p class="font-data-tabular text-data-tabular text-forest-deep">120 kg</p>
+</div>
+<div>
+<p class="text-label-sm font-label-caps text-slate-muted">Reorder Pt</p>
+<p class="font-data-tabular text-data-tabular text-forest-deep">30 kg</p>
+</div>
+</div>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-slate-muted text-body-md">Origin: Chile</span>
+<button class="text-forest-deep hover:text-forest-leaf transition-colors font-label-caps text-label-caps underline underline-offset-4">Details</button>
+</div>
+</div>
+</div>
+<!-- Card 4: Argan Kernels -->
+<div class="item-card bg-cream-surface border border-border-subtle rounded-xl overflow-hidden flex flex-col h-full group">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="A cluster of raw argan kernels in a rustic clay bowl. The kernels are earthy and golden-brown, presented in a way that emphasizes traditional Berber sourcing methods. The background is a soft-focus Mediterranean terrace in late afternoon light, creating a high-end, global sourcing narrative." src="https://lh3.googleusercontent.com/aida-public/AB6AXuC4C357I8sYtX7Qb-AyNdClKIy0yEefjgk5_xVHD6OdtJSH19MYZGSGWQ-fmfEwMnS57Fs2TX-90GxEqSrW9jib3BE3gAFlDAOYCcuthZdcJoyH9zEZlp3S8E2dsZjzQX3xUb5NAWGxhlrGq2Ehm1At9gmOaKT0pvWSVwKDIKtMwu-qt5_p4e4ZoxqDiZYlUZGZtlwmPVOUglCZAStDT2W3-dO8KZSoztPsH8gU1rF26QiopzDadN-OQ4t6ZY57qUFcRan8H67Os5eD"/>
+<span class="absolute top-3 right-3 bg-forest-leaf/10 text-forest-leaf text-label-caps px-3 py-1 rounded-full backdrop-blur-sm">In Stock</span>
+</div>
+<div class="p-element-gap-md flex flex-col flex-1">
+<div class="mb-4">
+<p class="text-label-sm font-label-caps text-slate-muted mb-1">SKU: RAW-AK-044</p>
+<h4 class="font-headline-sm text-headline-sm text-forest-deep">Raw Argan Kernels</h4>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6 border-y border-border-subtle/50 py-4">
+<div>
+<p class="text-label-sm font-label-caps text-slate-muted">Current Stock</p>
+<p class="font-data-tabular text-data-tabular text-forest-deep">85 kg</p>
+</div>
+<div>
+<p class="text-label-sm font-label-caps text-slate-muted">Reorder Pt</p>
+<p class="font-data-tabular text-data-tabular text-forest-deep">25 kg</p>
+</div>
+</div>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-slate-muted text-body-md">Origin: Morocco</span>
+<button class="text-forest-deep hover:text-forest-leaf transition-colors font-label-caps text-label-caps underline underline-offset-4">Details</button>
+</div>
+</div>
+</div>
+<!-- Card 5: Dried Seaweed -->
+<div class="item-card bg-cream-surface border border-border-subtle rounded-xl overflow-hidden flex flex-col h-full group">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="High-contrast macro photo of dark green dried kelp and seaweed flakes on a white marble slab. The lighting is crisp, emphasizing the jagged, architectural textures of the dried botanicals. The aesthetic is sophisticated, modern, and clinical yet natural." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBqzkFG1Qz30wB8eMX539RardS9h17zRfZY-BKz0UUoR5TkpXhAkLVg9CNWZXWyL5aos3_P73OHYt_WrIXj8WzrOO1AtK4VSgZuL5Yv5ZslWO1GISqKl99GTqtJ0AZlLROAtwO0rpLjxcLeHxQA45lRnZIlh1P1sU3_udyjTsFROY4mh-wdDMv1cibdDhHJe656RVpMBvw7UzvSnKTyQlKBIwQxhiVOG2gwZnT-czcx1rJ7lhaJCVmYHYzUrd5T0wWkBY4cmXj30E8E"/>
+<span class="absolute top-3 right-3 bg-forest-leaf/10 text-forest-leaf text-label-caps px-3 py-1 rounded-full backdrop-blur-sm">In Stock</span>
+</div>
+<div class="p-element-gap-md flex flex-col flex-1">
+<div class="mb-4">
+<p class="text-label-sm font-label-caps text-slate-muted mb-1">SKU: RAW-SW-088</p>
+<h4 class="font-headline-sm text-headline-sm text-forest-deep">Atlantic Kelp (Dried)</h4>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6 border-y border-border-subtle/50 py-4">
+<div>
+<p class="text-label-sm font-label-caps text-slate-muted">Current Stock</p>
+<p class="font-data-tabular text-data-tabular text-forest-deep">400 kg</p>
+</div>
+<div>
+<p class="text-label-sm font-label-caps text-slate-muted">Reorder Pt</p>
+<p class="font-data-tabular text-data-tabular text-forest-deep">100 kg</p>
+</div>
+</div>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-slate-muted text-body-md">Origin: Ireland</span>
+<button class="text-forest-deep hover:text-forest-leaf transition-colors font-label-caps text-label-caps underline underline-offset-4">Details</button>
+</div>
+</div>
+</div>
+<!-- Card 6: Beeswax Pellets -->
+<div class="item-card bg-cream-surface border border-border-subtle rounded-xl overflow-hidden flex flex-col h-full group">
+<div class="h-48 overflow-hidden relative">
+<img class="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110" data-alt="Dozens of golden yellow organic beeswax pellets scattered artistically on a clean wooden surface. The lighting is bright and warm, creating tiny shadows that give the scene depth. The overall feel is craft-oriented and premium." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDks8tbSGxskWGYmmd0eIJHdh6_HZbGBgVVDax1ns93fZfSslpLqS4AOUkwmuFHSDcK2p_2mzdxQbyWO5kn_2tmTOAlRn0VpGdSOb-FBqgdkDVFvZ1B8a39DLfzxUZ1_Rx1OsJnDeh47tE8YNrws9qANYxmrxK2BFima-E0AnCvnRelSk0nCdiPryAOhmq-I66Y9OUxxRcOAiBGQnb8ilMxHAFuKQ1taALhAlWS4s-H_kl38FxFqFlPhlVBhR6MVHxGlF5jyYGDlfMA"/>
+<span class="absolute top-3 right-3 bg-forest-leaf/10 text-forest-leaf text-label-caps px-3 py-1 rounded-full backdrop-blur-sm">In Stock</span>
+</div>
+<div class="p-element-gap-md flex flex-col flex-1">
+<div class="mb-4">
+<p class="text-label-sm font-label-caps text-slate-muted mb-1">SKU: RAW-BW-021</p>
+<h4 class="font-headline-sm text-headline-sm text-forest-deep">Yellow Beeswax Pellets</h4>
+</div>
+<div class="grid grid-cols-2 gap-4 mb-6 border-y border-border-subtle/50 py-4">
+<div>
+<p class="text-label-sm font-label-caps text-slate-muted">Current Stock</p>
+<p class="font-data-tabular text-data-tabular text-forest-deep">60 kg</p>
+</div>
+<div>
+<p class="text-label-sm font-label-caps text-slate-muted">Reorder Pt</p>
+<p class="font-data-tabular text-data-tabular text-forest-deep">20 kg</p>
+</div>
+</div>
+<div class="mt-auto flex justify-between items-center">
+<span class="text-slate-muted text-body-md">Origin: local</span>
+<button class="text-forest-deep hover:text-forest-leaf transition-colors font-label-caps text-label-caps underline underline-offset-4">Details</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Pagination/Footer Actions -->
+<footer class="mt-section-gap flex justify-between items-center border-t border-border-subtle pt-8">
+<p class="text-slate-muted text-body-md">Showing 6 of 42 raw items</p>
+<div class="flex gap-2">
+<button class="p-2 border border-border-subtle rounded-lg hover:bg-cream-surface transition-colors">
+<span class="material-symbols-outlined">chevron_left</span>
+</button>
+<button class="px-4 py-2 border border-forest-deep bg-forest-deep text-white rounded-lg font-body-md">1</button>
+<button class="px-4 py-2 border border-border-subtle hover:bg-cream-surface rounded-lg font-body-md">2</button>
+<button class="px-4 py-2 border border-border-subtle hover:bg-cream-surface rounded-lg font-body-md">3</button>
+<button class="p-2 border border-border-subtle rounded-lg hover:bg-cream-surface transition-colors">
+<span class="material-symbols-outlined">chevron_right</span>
+</button>
+</div>
+</footer>
+</main>
+</div>
+<!-- Micro-interaction Script -->
+<script>
+        document.querySelectorAll('.item-card').forEach(card => {
+            card.addEventListener('click', () => {
+                card.style.opacity = '0.8';
+                setTimeout(() => {
+                    card.style.opacity = '1';
+                }, 100);
+            });
+        });
+    </script>
+</body></html>

@@ -1,0 +1,26 @@
+# Build output
+/bin/
+/out/
+/build/
+/classes/
+*.class
+*.jar
+!/libs/*.jar
+
+# Database files
+/db/*.db
+/db/*.db-journal
+
+# Logs
+*.log
+
+# IDE files
+.idea/
+.vscode/
+*.iml
+*.ipr
+*.iws
+
+# Operating System files
+.DS_Store
+Thumbs.db
