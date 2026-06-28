@@ -31,6 +31,16 @@ public class AppState {
         notifyListeners();
     }
 
+    private String globalSearchQuery = "";
+
+    public String getGlobalSearchQuery() {
+        return globalSearchQuery;
+    }
+
+    public void setGlobalSearchQuery(String query) {
+        this.globalSearchQuery = query;
+    }
+
     public boolean isLoggedIn() {
         return currentUser != null;
     }

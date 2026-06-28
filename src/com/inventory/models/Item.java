@@ -132,4 +132,17 @@ public class Item {
     public void setStatus(String status) {
         this.status = status;
     }
+
+    public boolean isRaw() {
+        if (category == null) return false;
+        String lowerCat = category.toLowerCase();
+        return lowerCat.contains("raw") || 
+               lowerCat.contains("ingredient") || 
+               lowerCat.contains("oil") || 
+               lowerCat.contains("seed");
+    }
+
+    public boolean isProcessed() {
+        return !isRaw();
+    }
 }

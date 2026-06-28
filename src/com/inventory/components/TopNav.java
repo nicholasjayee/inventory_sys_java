@@ -99,6 +99,13 @@ public class TopNav extends JPanel {
         searchInput.setForeground(Theme.SLATE_MUTED);
         searchInput.setBorder(null);
         searchInput.setOpaque(false);
+        
+        searchInput.addActionListener(e -> {
+            String q = searchInput.getText().trim();
+            if (q.equals("Search items...")) q = "";
+            AppState.getInstance().setGlobalSearchQuery(q);
+            router.navigate("/items");
+        });
 
         searchPill.add(searchIconLabel, BorderLayout.WEST);
         searchPill.add(searchInput, BorderLayout.CENTER);

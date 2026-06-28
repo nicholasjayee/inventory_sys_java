@@ -239,7 +239,12 @@ public class RawItemsPage extends Page {
         // A product counts as 'raw' if its category is not finished goods (or contains 'raw', 'ingredient', 'oil', etc.)
         // We'll filter based on category matching raw inputs. If the category contains finished/packaged/batch, we skip it.
         // If there are no items at all, show empty state.
-        rawItems = allItems; // Show all items for full visibility in the mockup layout
+        rawItems = new java.util.ArrayList<>();
+        for (Item item : allItems) {
+            if (item.isRaw()) {
+                rawItems.add(item);
+            }
+        }
 
         if (rawItems.isEmpty()) {
             SwingUtilities.invokeLater(() -> {

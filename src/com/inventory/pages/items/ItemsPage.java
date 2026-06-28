@@ -329,8 +329,17 @@ public class ItemsPage extends Page {
 
     @Override
     public void onPageLoad() {
-        searchField.setText("");
-        new Thread(() -> loadItemsData("")).start();
+        String globalQ = com.inventory.state.AppState.getInstance().getGlobalSearchQuery();
+        final String initialSearch;
+        if (globalQ != null && !globalQ.isEmpty()) {
+            searchField.setText(globalQ);
+            initialSearch = globalQ;
+            com.inventory.state.AppState.getInstance().setGlobalSearchQuery(""); // consume it
+        } else {
+            searchField.setText("");
+            initialSearch = "";
+        }
+        new Thread(() -> loadItemsData(initialSearch)).start();
     }
 
     private void loadItemsData(String query) {
@@ -344,13 +353,12 @@ public class ItemsPage extends Page {
         // Apply Tab Filter locally
         loadedItems.clear();
         for (Item item : allItems) {
-            String category = item.getCategory().toLowerCase();
             if ("RAW".equals(activeTab)) {
-                if (category.contains("raw") || category.contains("ingredient") || category.contains("oil") || category.contains("seed")) {
+                if (item.isRaw()) {
                     loadedItems.add(item);
                 }
             } else if ("PROCESSED".equals(activeTab)) {
-                if (!category.contains("raw") && !category.contains("ingredient") && !category.contains("oil") && !category.contains("seed")) {
+                if (item.isProcessed()) {
                     loadedItems.add(item);
                 }
             } else {

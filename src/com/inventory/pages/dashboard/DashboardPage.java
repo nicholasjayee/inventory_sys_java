@@ -198,8 +198,7 @@ public class DashboardPage extends Page {
                 totalUnits += item.getQuantity();
                 totalValue += item.getQuantity() * item.getPrice();
                 
-                boolean isRaw = item.getCategory().toLowerCase().contains("raw") || item.getCategory().toLowerCase().contains("ingredient");
-                if (isRaw) {
+                if (item.isRaw()) {
                     rawStock += item.getQuantity();
                 } else {
                     processedStock += item.getQuantity();
