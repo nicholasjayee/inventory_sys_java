@@ -165,14 +165,14 @@ public class ItemDialog extends JDialog {
         JPanel pricePanel = new JPanel();
         pricePanel.setOpaque(false);
         pricePanel.setLayout(new BoxLayout(pricePanel, BoxLayout.Y_AXIS));
-        JLabel priceLabel = new JLabel("PRICE (USD)");
+        JLabel priceLabel = new JLabel("PRICE (" + com.inventory.app.AppConfig.getCurrencyCode() + ")");
         priceLabel.setFont(FontLoader.getInterSemiBold(10f));
         priceLabel.setForeground(Theme.FOREST_DEEP);
         priceLabel.setAlignmentX(LEFT_ALIGNMENT);
         
         JPanel priceFieldWrapper = new JPanel(new BorderLayout(4, 0));
         priceFieldWrapper.setOpaque(false);
-        JLabel dollarSign = new JLabel("$");
+        JLabel dollarSign = new JLabel(com.inventory.app.AppConfig.getCurrencySymbol());
         dollarSign.setFont(FontLoader.getInter(13f, Font.PLAIN));
         dollarSign.setForeground(Theme.SLATE_MUTED);
         priceField = new JTextField();

@@ -60,7 +60,7 @@ public class LoginFormPanel extends JPanel {
         titleLabel.setForeground(Theme.FOREST_DEEP);
         titleLabel.setAlignmentX(LEFT_ALIGNMENT);
 
-        JLabel subtitleLabel = new JLabel("<html>Please enter your details to access the inventory management suite.</html>");
+        JLabel subtitleLabel = new JLabel("<html>Please enter your details to access the " + com.inventory.app.AppConfig.getSubtitle() + ".</html>");
         subtitleLabel.setFont(FontLoader.getInter(13f, Font.PLAIN));
         subtitleLabel.setForeground(Theme.SLATE_MUTED);
         subtitleLabel.setAlignmentX(LEFT_ALIGNMENT);

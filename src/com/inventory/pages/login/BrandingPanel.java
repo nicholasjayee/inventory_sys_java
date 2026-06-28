@@ -61,7 +61,7 @@ public class BrandingPanel extends JPanel {
         logoPanel.setLayout(new BoxLayout(logoPanel, BoxLayout.Y_AXIS));
         logoPanel.setBorder(new EmptyBorder(48, 48, 0, 48));
 
-        JLabel brandLabel = new JLabel("Aramweer");
+        JLabel brandLabel = new JLabel(com.inventory.app.AppConfig.getBrandShort());
         brandLabel.setFont(FontLoader.getMerriweather(32f, Font.BOLD));
         brandLabel.setForeground(Theme.CREAM_BASE);
         brandLabel.setAlignmentX(LEFT_ALIGNMENT);

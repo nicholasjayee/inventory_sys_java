@@ -43,7 +43,7 @@ public class TopNav extends JPanel {
         // --- 1. Left branding ---
         JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         leftPanel.setOpaque(false);
-        JLabel brandLabel = new JLabel("Aramweer Organic Skin Care");
+        JLabel brandLabel = new JLabel(com.inventory.app.AppConfig.getBrandName());
         brandLabel.setFont(FontLoader.getMerriweather(16f, Font.BOLD));
         brandLabel.setForeground(Theme.FOREST_DEEP);
         leftPanel.add(brandLabel);

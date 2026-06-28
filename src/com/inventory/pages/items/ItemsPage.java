@@ -367,7 +367,7 @@ public class ItemsPage extends Page {
             }
         }
 
-        NumberFormat usdFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        NumberFormat usdFormat = com.inventory.app.AppConfig.getCurrencyFormat();
         NumberFormat unitFormat = NumberFormat.getNumberInstance(Locale.US);
 
         SwingUtilities.invokeLater(() -> {

@@ -104,7 +104,7 @@ public class DashboardHeader extends JPanel {
     }
 
     public void updateMetrics(int totalUnits, double totalValue) {
-        NumberFormat usdFormat = NumberFormat.getCurrencyInstance(Locale.US);
+        NumberFormat usdFormat = com.inventory.app.AppConfig.getCurrencyFormat();
         NumberFormat unitFormat = NumberFormat.getNumberInstance(Locale.US);
         
         // Match HTML suffix styling: bold number + regular slate-muted "units" suffix

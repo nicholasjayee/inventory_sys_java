@@ -35,4 +35,28 @@ public class AppConfig {
     public static String getDbUrl() {
         return "jdbc:sqlite:" + getDbPath();
     }
+
+    public static String getBrandName() {
+        return properties.getProperty("app.brand", "Aramweer Organic Skin Care");
+    }
+
+    public static String getBrandShort() {
+        return properties.getProperty("app.brand.short", "Aramweer");
+    }
+
+    public static String getSubtitle() {
+        return properties.getProperty("app.subtitle", "inventory management suite");
+    }
+
+    public static String getCurrencyCode() {
+        return properties.getProperty("app.currency.code", "USD");
+    }
+
+    public static String getCurrencySymbol() {
+        return properties.getProperty("app.currency.symbol", "$");
+    }
+
+    public static java.text.NumberFormat getCurrencyFormat() {
+        return new java.text.DecimalFormat(getCurrencySymbol() + "#,##0.00");
+    }
 }
