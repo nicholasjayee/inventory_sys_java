@@ -24,6 +24,10 @@ public class Main {
         // 1. Initialize Modern Flat Look and Feel
         try {
             FlatLightLaf.setup();
+            javax.swing.UIManager.put("ScrollPane.smoothScrolling", true);
+            javax.swing.UIManager.put("ScrollBar.showButtons", false);
+            javax.swing.UIManager.put("ScrollBar.thumbArc", 999);
+            javax.swing.UIManager.put("ScrollBar.thumbInsets", new java.awt.Insets(2, 2, 2, 2));
         } catch (Exception e) {
             System.err.println("FlatLightLaf failed to initialize. Falling back to default.");
         }

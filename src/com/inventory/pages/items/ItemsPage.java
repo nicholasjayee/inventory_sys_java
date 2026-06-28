@@ -402,6 +402,31 @@ public class ItemsPage extends Page {
 
             // 1. Left Rounded Icon Box (leaf vs cog)
             boolean isRaw = item.getCategory().toLowerCase().contains("raw") || item.getCategory().toLowerCase().contains("ingredient");
+            // Image lookup map
+            java.util.Map<String, String> IMAGE_URLS = new java.util.HashMap<>();
+            IMAGE_URLS.put("shea butter", "assets/images/shea_butter.jpg");
+            IMAGE_URLS.put("lavender", "assets/images/lavender.jpg");
+            IMAGE_URLS.put("rosehip", "assets/images/rosehip.jpg");
+            IMAGE_URLS.put("argan", "assets/images/argan.jpg");
+            IMAGE_URLS.put("kelp", "assets/images/kelp.jpg");
+            IMAGE_URLS.put("beeswax", "assets/images/beeswax.jpg");
+            IMAGE_URLS.put("macadamia", "assets/images/macadamia.jpg");
+            IMAGE_URLS.put("eucalyptus", "assets/images/eucalyptus.jpg");
+            IMAGE_URLS.put("baobab", "assets/images/baobab.jpg");
+            IMAGE_URLS.put("moringa", "assets/images/moringa.jpg");
+            IMAGE_URLS.put("serum", "assets/images/serum.jpg");
+            IMAGE_URLS.put("cream", "assets/images/cream.jpg");
+
+            String imageUrl = "";
+            String lowercaseName = item.getName().toLowerCase();
+            for (java.util.Map.Entry<String, String> entry : IMAGE_URLS.entrySet()) {
+                if (lowercaseName.contains(entry.getKey())) {
+                    imageUrl = entry.getValue();
+                    break;
+                }
+            }
+            final String finalUrl = imageUrl;
+
             JPanel iconPanel = new JPanel() {
                 @Override
                 protected void paintComponent(Graphics g) {
@@ -412,7 +437,20 @@ public class ItemsPage extends Page {
                     int w = getWidth();
                     int h = getHeight();
                     
-                    // Rounded border background
+                    // Draw Image if available
+                    if (!finalUrl.isEmpty()) {
+                        ImageIcon icon = com.inventory.components.ImageLoader.getOrLoadImage(item.getName() + "_thumb", finalUrl, this, w, h);
+                        if (icon != null) {
+                            g2.setClip(new RoundRectangle2D.Double(0, 0, w - 1, h - 1, 6, 6));
+                            g2.drawImage(icon.getImage(), 0, 0, w, h, null);
+                            g2.setColor(Theme.BORDER_SUBTLE);
+                            g2.draw(new RoundRectangle2D.Double(0, 0, w - 1, h - 1, 6, 6));
+                            g2.dispose();
+                            return;
+                        }
+                    }
+
+                    // Rounded border background fallback
                     g2.setColor(Theme.CREAM_SURFACE);
                     g2.fill(new RoundRectangle2D.Double(0, 0, w - 1, h - 1, 6, 6));
                     g2.setColor(Theme.BORDER_SUBTLE);

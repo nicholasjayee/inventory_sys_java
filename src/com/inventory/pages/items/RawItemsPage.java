@@ -406,7 +406,7 @@ public class RawItemsPage extends Page {
                 g2.dispose();
             }
         };
-        imagePanel.setPreferredSize(new Dimension(320, 160));
+        imagePanel.setPreferredSize(new Dimension(320, 200));
         imagePanel.setMinimumSize(new Dimension(320, 160));
 
         // 2. Bottom Info Panel

@@ -92,7 +92,7 @@ public class ProductBentoCard extends CardPanel {
                 g2.dispose();
             }
         };
-        imagePanel.setPreferredSize(new Dimension(320, 140));
+        imagePanel.setPreferredSize(new Dimension(320, 200));
 
         // Details Panel
         JPanel bodyPanel = new JPanel();
