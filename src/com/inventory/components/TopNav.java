@@ -74,6 +74,8 @@ public class TopNav extends JPanel {
             titleLabel.setText("Operations Dashboard");
         } else if ("/items".equals(path)) {
             titleLabel.setText("Items Library & Control");
+        } else if ("/raw-items".equals(path)) {
+            titleLabel.setText("Raw Ingredients Library");
         } else {
             titleLabel.setText("Management Suite");
         }

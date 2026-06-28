@@ -63,10 +63,8 @@ public class ItemsPage extends Page {
         searchField = new JTextField();
         Theme.styleTextField(searchField);
         searchField.setPreferredSize(new Dimension(240, 36));
-        // Add placeholder text (tip)
         searchField.setToolTipText("Search by item name or category...");
         
-        // Add live search functionality
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) { filter(); }
@@ -95,12 +93,12 @@ public class ItemsPage extends Page {
         add(topPanel, BorderLayout.NORTH);
 
         // Data Table
-        String[] columnNames = {"Name", "Category", "Quantity", "Price", "Status", "Actions"};
+        String[] columnNames = {"Name", "Category", "SKU", "Origin", "Quantity", "Price", "Status", "Actions"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                // Only the actions column (column 5) is editable (so buttons can click)
-                return column == 5;
+                // Only the actions column (column 7) is editable
+                return column == 7;
             }
         };
 
@@ -125,8 +123,10 @@ public class ItemsPage extends Page {
         leftRenderer.setHorizontalAlignment(JLabel.LEFT);
         leftRenderer.setBorder(new EmptyBorder(0, 8, 0, 8));
         
-        itemsTable.getColumnModel().getColumn(0).setCellRenderer(leftRenderer);
-        itemsTable.getColumnModel().getColumn(1).setCellRenderer(leftRenderer);
+        itemsTable.getColumnModel().getColumn(0).setCellRenderer(leftRenderer); // Name
+        itemsTable.getColumnModel().getColumn(1).setCellRenderer(leftRenderer); // Category
+        itemsTable.getColumnModel().getColumn(2).setCellRenderer(leftRenderer); // SKU
+        itemsTable.getColumnModel().getColumn(3).setCellRenderer(leftRenderer); // Origin
 
         // Numeric renderer
         DefaultTableCellRenderer numericRenderer = new DefaultTableCellRenderer() {
@@ -140,11 +140,11 @@ public class ItemsPage extends Page {
                 return this;
             }
         };
-        itemsTable.getColumnModel().getColumn(2).setCellRenderer(numericRenderer);
-        itemsTable.getColumnModel().getColumn(3).setCellRenderer(numericRenderer);
+        itemsTable.getColumnModel().getColumn(4).setCellRenderer(numericRenderer); // Quantity
+        itemsTable.getColumnModel().getColumn(5).setCellRenderer(numericRenderer); // Price
 
         // Status pill renderer
-        itemsTable.getColumnModel().getColumn(4).setCellRenderer(new DefaultTableCellRenderer() {
+        itemsTable.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 JPanel pillContainer = new JPanel(new GridBagLayout());
@@ -183,9 +183,9 @@ public class ItemsPage extends Page {
 
         // Actions Column Custom Renderer & Editor
         ActionButtonsRendererEditor actionRendererEditor = new ActionButtonsRendererEditor();
-        itemsTable.getColumnModel().getColumn(5).setCellRenderer(actionRendererEditor);
-        itemsTable.getColumnModel().getColumn(5).setCellEditor(actionRendererEditor);
-        itemsTable.getColumnModel().getColumn(5).setPreferredWidth(160);
+        itemsTable.getColumnModel().getColumn(7).setCellRenderer(actionRendererEditor);
+        itemsTable.getColumnModel().getColumn(7).setCellEditor(actionRendererEditor);
+        itemsTable.getColumnModel().getColumn(7).setPreferredWidth(160);
 
         JScrollPane scrollPane = new JScrollPane(itemsTable);
         scrollPane.setBorder(BorderFactory.createLineBorder(Theme.BORDER_SUBTLE, 1));
@@ -268,10 +268,12 @@ public class ItemsPage extends Page {
                 tableModel.addRow(new Object[]{
                     item.getName(),
                     item.getCategory(),
+                    item.getSku() != null ? item.getSku() : "-",
+                    item.getOrigin() != null ? item.getOrigin() : "-",
                     unitFormat.format(item.getQuantity()),
                     usdFormat.format(item.getPrice()),
                     item.getStatus(),
-                    item // Put the item object directly in the Actions cell so the editor can access it
+                    item // Item object for Actions Column Editor
                 });
             }
         });

@@ -10,6 +10,7 @@ import com.inventory.middleware.AuthMiddleware;
 import com.inventory.middleware.LoggingMiddleware;
 import com.inventory.pages.dashboard.DashboardPage;
 import com.inventory.pages.items.ItemsPage;
+import com.inventory.pages.items.RawItemsPage;
 import com.inventory.pages.login.LoginPage;
 import com.inventory.router.Router;
 import java.awt.CardLayout;
@@ -73,6 +74,7 @@ public class Main {
             }); 
             router.register("/dashboard", new DashboardPage(router));
             router.register("/items", new ItemsPage(router));
+            router.register("/raw-items", new RawItemsPage(router));
 
             // Register global Middleware chain (order matters)
             router.addGlobalMiddleware(new LoggingMiddleware());

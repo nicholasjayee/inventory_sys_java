@@ -10,13 +10,16 @@ CREATE TABLE IF NOT EXISTS users (
     role TEXT NOT NULL
 );
 
--- Items Table (Tied to the user who created them)
+-- Items Table (Tied to the user who created them, with SKU and Origin details)
 CREATE TABLE IF NOT EXISTS items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     uuid TEXT UNIQUE NOT NULL,
     user_uuid TEXT NOT NULL,
     name TEXT NOT NULL,
     category TEXT NOT NULL,
+    sku TEXT,
+    reorder_point INTEGER NOT NULL DEFAULT 0,
+    origin TEXT,
     quantity INTEGER NOT NULL DEFAULT 0,
     price REAL NOT NULL DEFAULT 0.0,
     status TEXT NOT NULL,

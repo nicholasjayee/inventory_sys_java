@@ -12,6 +12,7 @@ public class Sidebar extends JPanel {
     
     private JButton dashboardBtn;
     private JButton itemsBtn;
+    private JButton rawItemsBtn;
     private JLabel userLabel;
     private JLabel roleLabel;
 
@@ -62,9 +63,14 @@ public class Sidebar extends JPanel {
         itemsBtn = createNavButton("Items Library");
         itemsBtn.addActionListener(e -> router.navigate("/items"));
 
+        rawItemsBtn = createNavButton("Raw Items");
+        rawItemsBtn.addActionListener(e -> router.navigate("/raw-items"));
+
         navPanel.add(dashboardBtn);
         navPanel.add(Box.createVerticalStrut(8));
         navPanel.add(itemsBtn);
+        navPanel.add(Box.createVerticalStrut(8));
+        navPanel.add(rawItemsBtn);
         add(navPanel, BorderLayout.CENTER);
 
         // Bottom User Session Section
@@ -150,11 +156,14 @@ public class Sidebar extends JPanel {
         // Reset styles
         resetButtonTheme(dashboardBtn);
         resetButtonTheme(itemsBtn);
+        resetButtonTheme(rawItemsBtn);
 
         if ("/dashboard".equals(path)) {
             highlightButton(dashboardBtn);
         } else if ("/items".equals(path)) {
             highlightButton(itemsBtn);
+        } else if ("/raw-items".equals(path)) {
+            highlightButton(rawItemsBtn);
         }
     }
 

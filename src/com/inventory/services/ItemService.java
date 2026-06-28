@@ -10,7 +10,7 @@ public class ItemService {
 
     public List<Item> getAllItems() {
         List<Item> items = new ArrayList<>();
-        String sql = "SELECT id, uuid, user_uuid, name, category, quantity, price, status FROM items ORDER BY id DESC";
+        String sql = "SELECT id, uuid, user_uuid, name, category, sku, reorder_point, origin, quantity, price, status FROM items ORDER BY id DESC";
         try (Connection conn = DatabaseManager.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -27,7 +27,7 @@ public class ItemService {
 
     public List<Item> searchItems(String query) {
         List<Item> items = new ArrayList<>();
-        String sql = "SELECT id, uuid, user_uuid, name, category, quantity, price, status FROM items WHERE name LIKE ? OR category LIKE ? ORDER BY id DESC";
+        String sql = "SELECT id, uuid, user_uuid, name, category, sku, reorder_point, origin, quantity, price, status FROM items WHERE name LIKE ? OR category LIKE ? ORDER BY id DESC";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
@@ -48,7 +48,7 @@ public class ItemService {
     }
 
     public boolean addItem(Item item) {
-        String sql = "INSERT INTO items (uuid, user_uuid, name, category, quantity, price, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO items (uuid, user_uuid, name, category, sku, reorder_point, origin, quantity, price, status) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
@@ -56,9 +56,12 @@ public class ItemService {
             stmt.setString(2, item.getUserUuid());
             stmt.setString(3, item.getName());
             stmt.setString(4, item.getCategory());
-            stmt.setInt(5, item.getQuantity());
-            stmt.setDouble(6, item.getPrice());
-            stmt.setString(7, item.getStatus());
+            stmt.setString(5, item.getSku());
+            stmt.setInt(6, item.getReorderPoint());
+            stmt.setString(7, item.getOrigin());
+            stmt.setInt(8, item.getQuantity());
+            stmt.setDouble(9, item.getPrice());
+            stmt.setString(10, item.getStatus());
             
             int affected = stmt.executeUpdate();
             if (affected > 0) {
@@ -77,16 +80,19 @@ public class ItemService {
     }
 
     public boolean updateItem(Item item) {
-        String sql = "UPDATE items SET name = ?, category = ?, quantity = ?, price = ?, status = ? WHERE uuid = ?";
+        String sql = "UPDATE items SET name = ?, category = ?, sku = ?, reorder_point = ?, origin = ?, quantity = ?, price = ?, status = ? WHERE uuid = ?";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
             stmt.setString(1, item.getName());
             stmt.setString(2, item.getCategory());
-            stmt.setInt(3, item.getQuantity());
-            stmt.setDouble(4, item.getPrice());
-            stmt.setString(5, item.getStatus());
-            stmt.setString(6, item.getUuid());
+            stmt.setString(3, item.getSku());
+            stmt.setInt(4, item.getReorderPoint());
+            stmt.setString(5, item.getOrigin());
+            stmt.setInt(6, item.getQuantity());
+            stmt.setDouble(7, item.getPrice());
+            stmt.setString(8, item.getStatus());
+            stmt.setString(9, item.getUuid());
             
             return stmt.executeUpdate() > 0;
         } catch (SQLException e) {
@@ -117,6 +123,9 @@ public class ItemService {
             rs.getString("user_uuid"),
             rs.getString("name"),
             rs.getString("category"),
+            rs.getString("sku"),
+            rs.getInt("reorder_point"),
+            rs.getString("origin"),
             rs.getInt("quantity"),
             rs.getDouble("price"),
             rs.getString("status")

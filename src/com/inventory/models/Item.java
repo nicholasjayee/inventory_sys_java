@@ -8,29 +8,38 @@ public class Item {
     private String userUuid;
     private String name;
     private String category;
+    private String sku;
+    private int reorderPoint;
+    private String origin;
     private int quantity;
     private double price;
     private String status;
 
-    // Constructor for loading existing items from database
-    public Item(int id, String uuid, String userUuid, String name, String category, int quantity, double price, String status) {
+    // Full constructor for loading existing items from database
+    public Item(int id, String uuid, String userUuid, String name, String category, String sku, int reorderPoint, String origin, int quantity, double price, String status) {
         this.id = id;
         this.uuid = uuid;
         this.userUuid = userUuid;
         this.name = name;
         this.category = category;
+        this.sku = sku;
+        this.reorderPoint = reorderPoint;
+        this.origin = origin;
         this.quantity = quantity;
         this.price = price;
         this.status = status;
     }
 
     // Constructor for creating new items (auto-generates UUID)
-    public Item(String userUuid, String name, String category, int quantity, double price, String status) {
+    public Item(String userUuid, String name, String category, String sku, int reorderPoint, String origin, int quantity, double price, String status) {
         this.id = 0;
         this.uuid = UUID.randomUUID().toString();
         this.userUuid = userUuid;
         this.name = name;
         this.category = category;
+        this.sku = sku;
+        this.reorderPoint = reorderPoint;
+        this.origin = origin;
         this.quantity = quantity;
         this.price = price;
         this.status = status;
@@ -74,6 +83,30 @@ public class Item {
 
     public void setCategory(String category) {
         this.category = category;
+    }
+
+    public String getSku() {
+        return sku;
+    }
+
+    public void setSku(String sku) {
+        this.sku = sku;
+    }
+
+    public int getReorderPoint() {
+        return reorderPoint;
+    }
+
+    public void setReorderPoint(int reorderPoint) {
+        this.reorderPoint = reorderPoint;
+    }
+
+    public String getOrigin() {
+        return origin;
+    }
+
+    public void setOrigin(String origin) {
+        this.origin = origin;
     }
 
     public int getQuantity() {
