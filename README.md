@@ -31,3 +31,12 @@ To immediately build and launch the application on MacOS or Linux:
 ```bash
 ./build.sh && ./run.sh
 ```
+
+---
+
+## 👨‍💻 Author & Credits
+* **Developer**: Ssekabira Nicholas
+* **Company**: code8
+
+## 📄 License
+This project is licensed under the **MIT License**. See the `LICENSE` file for details.
