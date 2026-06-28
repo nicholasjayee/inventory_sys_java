@@ -237,9 +237,9 @@ public class ItemsPage extends Page {
 
         if (choice == JOptionPane.YES_OPTION) {
             new Thread(() -> {
-                boolean deleted = itemService.deleteItem(item.getId());
+                boolean deleted = itemService.deleteItemByUuid(item.getUuid());
                 if (deleted) {
-                    System.out.println("Deleted item ID: " + item.getId());
+                    System.out.println("Deleted item with UUID: " + item.getUuid());
                     loadItemsData("");
                 }
             }).start();

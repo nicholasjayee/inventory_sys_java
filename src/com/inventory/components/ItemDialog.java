@@ -196,7 +196,7 @@ public class ItemDialog extends JDialog {
         }
 
         if (item == null) {
-            item = new Item(0, name, category, quantity, price, status);
+            item = new Item(name, category, quantity, price, status);
         } else {
             item.setName(name);
             item.setCategory(category);

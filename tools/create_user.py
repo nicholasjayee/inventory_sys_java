@@ -2,6 +2,7 @@
 import sqlite3
 import os
 import sys
+import uuid
 
 def get_db_path():
     # Read the db.path from metadata/app.properties if it exists
@@ -73,10 +74,13 @@ def main():
         if role.lower() not in ["admin", "manager", "staff"]:
             role = role.capitalize()
 
+        # Generate a unique UUID for the new user
+        user_uuid = str(uuid.uuid4())
+
         # Insert user
         cursor.execute(
-            "INSERT INTO users (username, password_hash, display_name, role) VALUES (?, ?, ?, ?)",
-            (username, password, display_name, role)
+            "INSERT INTO users (uuid, username, password_hash, display_name, role) VALUES (?, ?, ?, ?, ?)",
+            (user_uuid, username, password, display_name, role)
         )
         conn.commit()
         
@@ -85,6 +89,7 @@ def main():
         print(f"  Username:     {username}")
         print(f"  Display Name: {display_name}")
         print(f"  Role:         {role}")
+        print(f"  User UUID:    {user_uuid}")
         print("=========================================")
         
     except sqlite3.Error as e:
