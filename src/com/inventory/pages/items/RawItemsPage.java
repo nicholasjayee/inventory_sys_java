@@ -258,18 +258,24 @@ public class RawItemsPage extends Page {
         // Metrics calculations
         int totalRawSku = rawItems.size();
         int lowStockCount = 0;
+        int pendingCount = 0;
         for (Item item : rawItems) {
             if ("Low Stock".equalsIgnoreCase(item.getStatus()) || "Out of Stock".equalsIgnoreCase(item.getStatus())) {
                 lowStockCount++;
+            }
+            if ("Out of Stock".equalsIgnoreCase(item.getStatus())) {
+                pendingCount++;
             }
         }
 
         final int finalSku = totalRawSku;
         final int finalLow = lowStockCount;
+        final int finalPending = pendingCount;
 
         SwingUtilities.invokeLater(() -> {
             totalRawSkuLabel.setText(String.format("%02d", finalSku));
             lowStockAlertsLabel.setText(String.format("%02d", finalLow));
+            pendingArrivalsLabel.setText(String.format("%02d", finalPending));
 
             // Populate Grid Container
             gridContainer.removeAll();

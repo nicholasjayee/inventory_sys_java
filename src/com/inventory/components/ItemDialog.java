@@ -321,6 +321,12 @@ public class ItemDialog extends JDialog {
         String name = nameField.getText().trim();
         String category = (String) categoryCombo.getSelectedItem();
         String sku = skuField.getText().trim();
+        if (sku.isEmpty()) {
+            String catPrefix = category.length() >= 3 ? category.substring(0, 3).toUpperCase() : category.toUpperCase();
+            String namePrefix = name.length() >= 3 ? name.substring(0, 3).toUpperCase() : name.toUpperCase();
+            int rand = 100 + new java.util.Random().nextInt(900);
+            sku = catPrefix + "-" + namePrefix + "-" + rand;
+        }
         int quantity = (Integer) quantitySpinner.getValue();
         int reorderPoint = (Integer) reorderSpinner.getValue();
         String priceText = priceField.getText().trim();
