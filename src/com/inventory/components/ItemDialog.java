@@ -196,7 +196,11 @@ public class ItemDialog extends JDialog {
         }
 
         if (item == null) {
-            item = new Item(name, category, quantity, price, status);
+            String userUuid = "33331b26-f716-4df6-a2cb-13f1c20f41e7"; // Default fallback
+            if (com.inventory.state.AppState.getInstance().isLoggedIn()) {
+                userUuid = com.inventory.state.AppState.getInstance().getCurrentUser().getUuid();
+            }
+            item = new Item(userUuid, name, category, quantity, price, status);
         } else {
             item.setName(name);
             item.setCategory(category);

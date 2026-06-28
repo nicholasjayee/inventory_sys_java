@@ -10,7 +10,7 @@ public class ItemService {
 
     public List<Item> getAllItems() {
         List<Item> items = new ArrayList<>();
-        String sql = "SELECT id, uuid, name, category, quantity, price, status FROM items ORDER BY id DESC";
+        String sql = "SELECT id, uuid, user_uuid, name, category, quantity, price, status FROM items ORDER BY id DESC";
         try (Connection conn = DatabaseManager.getConnection();
              Statement stmt = conn.createStatement();
              ResultSet rs = stmt.executeQuery(sql)) {
@@ -27,7 +27,7 @@ public class ItemService {
 
     public List<Item> searchItems(String query) {
         List<Item> items = new ArrayList<>();
-        String sql = "SELECT id, uuid, name, category, quantity, price, status FROM items WHERE name LIKE ? OR category LIKE ? ORDER BY id DESC";
+        String sql = "SELECT id, uuid, user_uuid, name, category, quantity, price, status FROM items WHERE name LIKE ? OR category LIKE ? ORDER BY id DESC";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql)) {
             
@@ -48,16 +48,17 @@ public class ItemService {
     }
 
     public boolean addItem(Item item) {
-        String sql = "INSERT INTO items (uuid, name, category, quantity, price, status) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO items (uuid, user_uuid, name, category, quantity, price, status) VALUES (?, ?, ?, ?, ?, ?, ?)";
         try (Connection conn = DatabaseManager.getConnection();
              PreparedStatement stmt = conn.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
             
             stmt.setString(1, item.getUuid());
-            stmt.setString(2, item.getName());
-            stmt.setString(3, item.getCategory());
-            stmt.setInt(4, item.getQuantity());
-            stmt.setDouble(5, item.getPrice());
-            stmt.setString(6, item.getStatus());
+            stmt.setString(2, item.getUserUuid());
+            stmt.setString(3, item.getName());
+            stmt.setString(4, item.getCategory());
+            stmt.setInt(5, item.getQuantity());
+            stmt.setDouble(6, item.getPrice());
+            stmt.setString(7, item.getStatus());
             
             int affected = stmt.executeUpdate();
             if (affected > 0) {
@@ -113,6 +114,7 @@ public class ItemService {
         return new Item(
             rs.getInt("id"),
             rs.getString("uuid"),
+            rs.getString("user_uuid"),
             rs.getString("name"),
             rs.getString("category"),
             rs.getInt("quantity"),
