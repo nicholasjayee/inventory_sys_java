@@ -42,11 +42,15 @@ public class ImageLoader {
         // Fetch image in background
         executor.submit(() -> {
             try {
-                URL url = new URL(urlString);
-                // Set User-Agent headers if necessary to prevent HTTP 403
-                java.net.URLConnection conn = url.openConnection();
-                conn.setRequestProperty("User-Agent", "Mozilla/5.0");
-                BufferedImage rawImage = ImageIO.read(conn.getInputStream());
+                BufferedImage rawImage;
+                if (urlString.startsWith("http://") || urlString.startsWith("https://")) {
+                    URL url = new URL(urlString);
+                    java.net.URLConnection conn = url.openConnection();
+                    conn.setRequestProperty("User-Agent", "Mozilla/5.0");
+                    rawImage = ImageIO.read(conn.getInputStream());
+                } else {
+                    rawImage = ImageIO.read(new java.io.File(urlString));
+                }
                 
                 if (rawImage != null) {
                     // Resize to fit aspect-fill scaling (object-fit: cover equivalent)
