@@ -37,11 +37,11 @@ public class TopNav extends JPanel {
         ));
         
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weighty = 1.0;
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        // Default weighty is 0.0, which naturally centers the row vertically in the TopNav's 64px height.
 
         // --- 1. Left branding ---
-        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 22));
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         leftPanel.setOpaque(false);
         JLabel brandLabel = new JLabel("Aramweer Organic Skin Care");
         brandLabel.setFont(FontLoader.getMerriweather(16f, Font.BOLD));
@@ -52,7 +52,7 @@ public class TopNav extends JPanel {
         add(leftPanel, gbc);
 
         // --- 2. Center Nav Links (Home, Items, Inventory) ---
-        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 32, 14));
+        JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 32, 0));
         centerPanel.setOpaque(false);
 
         homeBtn = createNavLink("Home", "/dashboard");
@@ -67,7 +67,7 @@ public class TopNav extends JPanel {
         add(centerPanel, gbc);
 
         // --- 3. Right Actions (Search Pill + Sign out + Avatar) ---
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 14));
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 0));
         rightPanel.setOpaque(false);
 
         // Search Wrapper (rounded-lg equivalent)
