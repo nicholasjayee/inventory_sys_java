@@ -130,7 +130,7 @@ public class ProductBentoCard extends CardPanel {
         JLabel priceTitle = new JLabel("PRICE");
         priceTitle.setFont(FontLoader.getInterSemiBold(9f));
         priceTitle.setForeground(Theme.SLATE_MUTED);
-        JLabel priceVal = new JLabel(NumberFormat.getCurrencyInstance(Locale.US).format(item.getPrice()) + (isRaw ? " / kg" : " / u"));
+        JLabel priceVal = new JLabel(com.inventory.app.AppConfig.getCurrencyFormat().format(item.getPrice()) + (isRaw ? " / kg" : " / u"));
         priceVal.setFont(FontLoader.getInterSemiBold(13f));
         priceVal.setForeground(Theme.FOREST_DEEP);
         pricePanel.add(priceTitle);
