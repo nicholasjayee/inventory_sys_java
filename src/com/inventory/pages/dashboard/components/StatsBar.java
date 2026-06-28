@@ -20,9 +20,12 @@ public class StatsBar extends JPanel {
         setPreferredSize(new Dimension(800, 90));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
 
-        add(createStatsCard("RAW STOCK", rawStockVal = new JLabel("0 units"), "assets/icons/box_active.png", Theme.SUCCESS_BG));
-        add(createStatsCard("PROCESSED GOODS", processedGoodsVal = new JLabel("0 units"), "assets/icons/science_active.png", Theme.SUCCESS_BG));
-        add(createStatsCard("LOW STOCK ALERTS", lowStockAlertsVal = new JLabel("0 items"), "assets/icons/warning.png", Theme.ERROR_BG));
+        Color forestDeep10 = new Color(Theme.FOREST_DEEP.getRed(), Theme.FOREST_DEEP.getGreen(), Theme.FOREST_DEEP.getBlue(), 25);
+        Color error10 = new Color(Theme.ERROR_FG.getRed(), Theme.ERROR_FG.getGreen(), Theme.ERROR_FG.getBlue(), 25);
+
+        add(createStatsCard("RAW STOCK", rawStockVal = new JLabel("0 units"), "assets/icons/box_active.png", forestDeep10));
+        add(createStatsCard("PROCESSED GOODS", processedGoodsVal = new JLabel("0 units"), "assets/icons/science_active.png", forestDeep10));
+        add(createStatsCard("LOW STOCK ALERTS", lowStockAlertsVal = new JLabel("0 items"), "assets/icons/warning.png", error10));
     }
 
     public void updateMetrics(int rawUnits, int processedUnits, int lowAlerts) {
@@ -68,17 +71,17 @@ public class StatsBar extends JPanel {
         infoPanel.setLayout(new BoxLayout(infoPanel, BoxLayout.Y_AXIS));
 
         JLabel titleLabel = new JLabel(title);
-        titleLabel.setFont(FontLoader.getInterSemiBold(9f));
+        titleLabel.setFont(FontLoader.getInterSemiBold(12f));
         titleLabel.setForeground(Theme.SLATE_MUTED);
 
-        valueLabel.setFont(FontLoader.getMerriweather(18f, Font.BOLD));
+        valueLabel.setFont(FontLoader.getMerriweather(20f, Font.BOLD));
         valueLabel.setForeground(Theme.FOREST_DEEP);
         if (title.contains("LOW")) {
             valueLabel.setForeground(Theme.ERROR_FG);
         }
 
         infoPanel.add(titleLabel);
-        infoPanel.add(Box.createVerticalStrut(2));
+        infoPanel.add(Box.createVerticalStrut(4));
         infoPanel.add(valueLabel);
 
         card.add(circle, BorderLayout.WEST);
