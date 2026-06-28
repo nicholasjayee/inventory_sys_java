@@ -1,6 +1,7 @@
 package com.inventory.pages.items;
 
 import com.inventory.components.FontLoader;
+import com.inventory.components.ImageLoader;
 import com.inventory.components.ItemDialog;
 import com.inventory.components.Theme;
 import com.inventory.models.Item;
@@ -8,7 +9,11 @@ import com.inventory.router.Page;
 import com.inventory.router.Router;
 import com.inventory.services.ItemService;
 import java.awt.*;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.RoundRectangle2D;
 import java.text.NumberFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import javax.swing.*;
@@ -27,7 +32,14 @@ public class ItemsPage extends Page {
     private JTextField searchField;
     private DefaultTableModel tableModel;
     private JTable itemsTable;
-    private List<Item> loadedItems;
+    
+    // Segment controller buttons
+    private JButton tabAllBtn;
+    private JButton tabRawBtn;
+    private JButton tabProcessedBtn;
+    private String activeTab = "ALL"; // "ALL", "RAW", "PROCESSED"
+
+    private List<Item> loadedItems = new ArrayList<>();
 
     public ItemsPage(Router router) {
         this.router = router;
@@ -38,33 +50,47 @@ public class ItemsPage extends Page {
     private void initializeUI() {
         setBackground(Theme.CREAM_BASE);
         setLayout(new BorderLayout());
-        setBorder(new EmptyBorder(32, 32, 32, 32));
 
-        // Top Header Section
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setOpaque(false);
-        topPanel.setBorder(new EmptyBorder(0, 0, 24, 0));
+        // --- 1. Hero Banner Panel ---
+        HeroBannerPanel heroPanel = new HeroBannerPanel();
+        add(heroPanel, BorderLayout.NORTH);
 
-        JPanel titlePanel = new JPanel(new BorderLayout());
-        titlePanel.setOpaque(false);
-        JLabel pageTitle = new JLabel("Items Library");
-        pageTitle.setFont(FontLoader.getMerriweather(28f, Font.BOLD));
-        pageTitle.setForeground(Theme.FOREST_DEEP);
-        JLabel pageSubtitle = new JLabel("Manage organic skincare raw materials and processed inventories.");
-        pageSubtitle.setFont(FontLoader.getInter(14f, Font.PLAIN));
-        pageSubtitle.setForeground(Theme.SLATE_MUTED);
-        titlePanel.add(pageTitle, BorderLayout.NORTH);
-        titlePanel.add(pageSubtitle, BorderLayout.SOUTH);
+        // --- 2. Main Body Container ---
+        JPanel bodyContainer = new JPanel();
+        bodyContainer.setOpaque(false);
+        bodyContainer.setLayout(new BoxLayout(bodyContainer, BoxLayout.Y_AXIS));
+        bodyContainer.setBorder(new EmptyBorder(24, 32, 32, 32));
 
-        // Actions Panel: Search + Add Button
-        JPanel actionsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
-        actionsPanel.setOpaque(false);
+        // Controls bar panel (Filters segment + Actions)
+        JPanel controlsBar = new JPanel(new BorderLayout());
+        controlsBar.setOpaque(false);
+        controlsBar.setBorder(new EmptyBorder(0, 0, 16, 0));
+
+        // Segment Tabs (Left)
+        JPanel tabsWrapper = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        tabsWrapper.setOpaque(true);
+        tabsWrapper.setBackground(Theme.CREAM_SURFACE);
+        tabsWrapper.setBorder(BorderFactory.createCompoundBorder(
+            new Theme.RoundedBorder(6, Theme.BORDER_SUBTLE, 1),
+            new EmptyBorder(2, 2, 2, 2)
+        ));
+
+        tabAllBtn = createTabButton("View All", "ALL");
+        tabRawBtn = createTabButton("View Raw", "RAW");
+        tabProcessedBtn = createTabButton("View Processed", "PROCESSED");
+
+        tabsWrapper.add(tabAllBtn);
+        tabsWrapper.add(tabRawBtn);
+        tabsWrapper.add(tabProcessedBtn);
+
+        // Search & Add Button (Right)
+        JPanel rightActions = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+        rightActions.setOpaque(false);
 
         searchField = new JTextField();
         Theme.styleTextField(searchField);
-        searchField.setPreferredSize(new Dimension(240, 36));
-        searchField.setToolTipText("Search by item name or category...");
-        
+        searchField.setPreferredSize(new Dimension(220, 36));
+        searchField.setToolTipText("Search items...");
         searchField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) { filter(); }
@@ -74,61 +100,57 @@ public class ItemsPage extends Page {
             public void changedUpdate(DocumentEvent e) { filter(); }
             
             private void filter() {
-                String query = searchField.getText().trim();
-                new Thread(() -> loadItemsData(query)).start();
+                loadItemsData(searchField.getText().trim());
             }
         });
 
-        JButton addItemBtn = new JButton("+ Add New Item");
+        JButton addItemBtn = new JButton("+ New Item");
         Theme.stylePrimaryButton(addItemBtn);
-        addItemBtn.setPreferredSize(new Dimension(140, 36));
+        addItemBtn.setPreferredSize(new Dimension(120, 36));
         addItemBtn.addActionListener(e -> showAddItemDialog());
 
-        actionsPanel.add(new JLabel("Search: "));
-        actionsPanel.add(searchField);
-        actionsPanel.add(addItemBtn);
+        rightActions.add(new JLabel("Search: "));
+        rightActions.add(searchField);
+        rightActions.add(addItemBtn);
 
-        topPanel.add(titlePanel, BorderLayout.WEST);
-        topPanel.add(actionsPanel, BorderLayout.EAST);
-        add(topPanel, BorderLayout.NORTH);
+        controlsBar.add(tabsWrapper, BorderLayout.WEST);
+        controlsBar.add(rightActions, BorderLayout.EAST);
+        bodyContainer.add(controlsBar);
 
-        // Data Table
-        String[] columnNames = {"Name", "Category", "SKU", "Origin", "Quantity", "Price", "Status", "Actions"};
+        // --- 3. Inventory Table ---
+        String[] columnNames = {"Name", "Category", "Quantity", "Price", "Status", "Actions"};
         tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                // Only the actions column (column 7) is editable
-                return column == 7;
+                return column == 5; // Only actions column is editable
             }
         };
 
         itemsTable = new JTable(tableModel);
         itemsTable.setFont(FontLoader.getInter(13f, Font.PLAIN));
-        itemsTable.setRowHeight(44);
+        itemsTable.setRowHeight(56); // High rows to fit Name + SKU stack
         itemsTable.setGridColor(Theme.BORDER_SUBTLE);
         itemsTable.setShowVerticalLines(false);
         itemsTable.setSelectionBackground(Theme.CREAM_SURFACE);
         itemsTable.setSelectionForeground(Theme.FOREST_DEEP);
 
-        // Styling table header
+        // Header Styling
         JTableHeader tableHeader = itemsTable.getTableHeader();
         tableHeader.setFont(FontLoader.getInterSemiBold(11f));
         tableHeader.setBackground(Theme.CREAM_SURFACE);
         tableHeader.setForeground(Theme.SLATE_MUTED);
-        tableHeader.setPreferredSize(new Dimension(800, 36));
+        tableHeader.setPreferredSize(new Dimension(800, 38));
         tableHeader.setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Theme.BORDER_SUBTLE));
 
-        // Alignments and Cell Renderers
+        // Custom Cell Renderers
+        itemsTable.getColumnModel().getColumn(0).setCellRenderer(new ItemNameCellRenderer()); // Custom SKU stack + Icon
+        
         DefaultTableCellRenderer leftRenderer = new DefaultTableCellRenderer();
         leftRenderer.setHorizontalAlignment(JLabel.LEFT);
         leftRenderer.setBorder(new EmptyBorder(0, 8, 0, 8));
-        
-        itemsTable.getColumnModel().getColumn(0).setCellRenderer(leftRenderer); // Name
         itemsTable.getColumnModel().getColumn(1).setCellRenderer(leftRenderer); // Category
-        itemsTable.getColumnModel().getColumn(2).setCellRenderer(leftRenderer); // SKU
-        itemsTable.getColumnModel().getColumn(3).setCellRenderer(leftRenderer); // Origin
 
-        // Numeric renderer
+        // Numeric fields right align
         DefaultTableCellRenderer numericRenderer = new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
@@ -140,11 +162,11 @@ public class ItemsPage extends Page {
                 return this;
             }
         };
-        itemsTable.getColumnModel().getColumn(4).setCellRenderer(numericRenderer); // Quantity
-        itemsTable.getColumnModel().getColumn(5).setCellRenderer(numericRenderer); // Price
+        itemsTable.getColumnModel().getColumn(2).setCellRenderer(numericRenderer); // Qty
+        itemsTable.getColumnModel().getColumn(3).setCellRenderer(numericRenderer); // Price
 
         // Status pill renderer
-        itemsTable.getColumnModel().getColumn(6).setCellRenderer(new DefaultTableCellRenderer() {
+        itemsTable.getColumnModel().getColumn(4).setCellRenderer(new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
                 JPanel pillContainer = new JPanel(new GridBagLayout());
@@ -183,14 +205,55 @@ public class ItemsPage extends Page {
 
         // Actions Column Custom Renderer & Editor
         ActionButtonsRendererEditor actionRendererEditor = new ActionButtonsRendererEditor();
-        itemsTable.getColumnModel().getColumn(7).setCellRenderer(actionRendererEditor);
-        itemsTable.getColumnModel().getColumn(7).setCellEditor(actionRendererEditor);
-        itemsTable.getColumnModel().getColumn(7).setPreferredWidth(160);
+        itemsTable.getColumnModel().getColumn(5).setCellRenderer(actionRendererEditor);
+        itemsTable.getColumnModel().getColumn(5).setCellEditor(actionRendererEditor);
+        itemsTable.getColumnModel().getColumn(5).setPreferredWidth(160);
 
         JScrollPane scrollPane = new JScrollPane(itemsTable);
         scrollPane.setBorder(BorderFactory.createLineBorder(Theme.BORDER_SUBTLE, 1));
         scrollPane.getViewport().setBackground(Color.WHITE);
-        add(scrollPane, BorderLayout.CENTER);
+        
+        bodyContainer.add(scrollPane);
+        add(bodyContainer, BorderLayout.CENTER);
+    }
+
+    private JButton createTabButton(String text, String tabCode) {
+        JButton btn = new JButton(text);
+        btn.setFont(FontLoader.getInterSemiBold(11f));
+        btn.setFocusPainted(false);
+        btn.setBorder(new EmptyBorder(6, 16, 6, 16));
+        btn.setOpaque(true);
+        btn.setContentAreaFilled(true);
+        
+        // Initial Theme styles
+        updateTabButtonVisuals(btn, tabCode.equals(activeTab));
+
+        btn.addActionListener(e -> {
+            activeTab = tabCode;
+            updateTabButtonVisuals(tabAllBtn, "ALL".equals(activeTab));
+            updateTabButtonVisuals(tabRawBtn, "RAW".equals(activeTab));
+            updateTabButtonVisuals(tabProcessedBtn, "PROCESSED".equals(activeTab));
+            loadItemsData(searchField.getText().trim());
+        });
+        return btn;
+    }
+
+    private void updateTabButtonVisuals(JButton btn, boolean isActive) {
+        if (isActive) {
+            btn.setBackground(Theme.FOREST_DEEP);
+            btn.setForeground(Color.WHITE);
+            btn.setBorder(BorderFactory.createCompoundBorder(
+                new Theme.RoundedBorder(4, Theme.FOREST_DEEP, 1),
+                new EmptyBorder(6, 16, 6, 16)
+            ));
+        } else {
+            btn.setBackground(Theme.CREAM_SURFACE);
+            btn.setForeground(Theme.FOREST_LEAF);
+            btn.setBorder(BorderFactory.createCompoundBorder(
+                new Theme.RoundedBorder(4, Theme.CREAM_SURFACE, 1),
+                new EmptyBorder(6, 16, 6, 16)
+            ));
+        }
     }
 
     private void showAddItemDialog() {
@@ -203,7 +266,6 @@ public class ItemsPage extends Page {
             new Thread(() -> {
                 boolean added = itemService.addItem(newItem);
                 if (added) {
-                    System.out.println("Added item successfully: " + newItem.getName());
                     loadItemsData("");
                 }
             }).start();
@@ -219,7 +281,6 @@ public class ItemsPage extends Page {
             new Thread(() -> {
                 boolean updated = itemService.updateItem(item);
                 if (updated) {
-                    System.out.println("Updated item successfully: " + item.getName());
                     loadItemsData("");
                 }
             }).start();
@@ -239,7 +300,6 @@ public class ItemsPage extends Page {
             new Thread(() -> {
                 boolean deleted = itemService.deleteItemByUuid(item.getUuid());
                 if (deleted) {
-                    System.out.println("Deleted item with UUID: " + item.getUuid());
                     loadItemsData("");
                 }
             }).start();
@@ -253,10 +313,29 @@ public class ItemsPage extends Page {
     }
 
     private void loadItemsData(String query) {
+        List<Item> allItems;
         if (query == null || query.isEmpty()) {
-            loadedItems = itemService.getAllItems();
+            allItems = itemService.getAllItems();
         } else {
-            loadedItems = itemService.searchItems(query);
+            allItems = itemService.searchItems(query);
+        }
+
+        // Apply Tab Filter locally
+        loadedItems.clear();
+        for (Item item : allItems) {
+            String category = item.getCategory().toLowerCase();
+            if ("RAW".equals(activeTab)) {
+                if (category.contains("raw") || category.contains("ingredient") || category.contains("oil") || category.contains("seed")) {
+                    loadedItems.add(item);
+                }
+            } else if ("PROCESSED".equals(activeTab)) {
+                if (!category.contains("raw") && !category.contains("ingredient") && !category.contains("oil") && !category.contains("seed")) {
+                    loadedItems.add(item);
+                }
+            } else {
+                // ALL
+                loadedItems.add(item);
+            }
         }
 
         NumberFormat usdFormat = NumberFormat.getCurrencyInstance(Locale.US);
@@ -266,20 +345,167 @@ public class ItemsPage extends Page {
             tableModel.setRowCount(0);
             for (Item item : loadedItems) {
                 tableModel.addRow(new Object[]{
-                    item.getName(),
+                    item, // Name cell takes the whole item object for the Custom SKU Renderer
                     item.getCategory(),
-                    item.getSku() != null ? item.getSku() : "-",
-                    item.getOrigin() != null ? item.getOrigin() : "-",
-                    unitFormat.format(item.getQuantity()),
-                    usdFormat.format(item.getPrice()),
+                    unitFormat.format(item.getQuantity()) + ("Raw Items".equalsIgnoreCase(item.getCategory()) ? " kg" : " Units"),
+                    usdFormat.format(item.getPrice()) + ("Raw Items".equalsIgnoreCase(item.getCategory()) ? " / kg" : " / ea"),
                     item.getStatus(),
-                    item // Item object for Actions Column Editor
+                    item // Actions Cell Editor takes the item object
                 });
             }
         });
     }
 
-    // Helper Action Buttons Renderer and Editor class
+    // --- Custom Name + SKU + Icon Cell Renderer ---
+    private static class ItemNameCellRenderer extends DefaultTableCellRenderer {
+        @Override
+        public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
+            if (!(value instanceof Item)) {
+                return super.getTableCellRendererComponent(table, value, isSelected, hasFocus, row, column);
+            }
+
+            Item item = (Item) value;
+
+            JPanel container = new JPanel(new BorderLayout(12, 0));
+            container.setOpaque(true);
+            container.setBorder(new EmptyBorder(8, 8, 8, 8));
+            container.setBackground(isSelected ? table.getSelectionBackground() : table.getBackground());
+
+            // 1. Left Rounded Icon Box (leaf vs cog)
+            boolean isRaw = item.getCategory().toLowerCase().contains("raw") || item.getCategory().toLowerCase().contains("ingredient");
+            JPanel iconPanel = new JPanel() {
+                @Override
+                protected void paintComponent(Graphics g) {
+                    super.paintComponent(g);
+                    Graphics2D g2 = (Graphics2D) g.create();
+                    g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+                    
+                    int w = getWidth();
+                    int h = getHeight();
+                    
+                    // Rounded border background
+                    g2.setColor(Theme.CREAM_SURFACE);
+                    g2.fill(new RoundRectangle2D.Double(0, 0, w - 1, h - 1, 6, 6));
+                    g2.setColor(Theme.BORDER_SUBTLE);
+                    g2.draw(new RoundRectangle2D.Double(0, 0, w - 1, h - 1, 6, 6));
+
+                    // Paint Eco Leaf or Cog vector
+                    g2.setStroke(new BasicStroke(1.5f));
+                    if (isRaw) {
+                        g2.setColor(Theme.FOREST_LEAF);
+                        // Simple Leaf curve
+                        Path2D.Double leaf = new Path2D.Double();
+                        leaf.moveTo(w * 0.5, h * 0.25);
+                        leaf.curveTo(w * 0.25, h * 0.35, w * 0.3, h * 0.65, w * 0.5, h * 0.75);
+                        leaf.curveTo(w * 0.7, h * 0.65, w * 0.75, h * 0.35, w * 0.5, h * 0.25);
+                        g2.draw(leaf);
+                        g2.drawLine((int)(w*0.5), (int)(h*0.3), (int)(w*0.5), (int)(h*0.7));
+                    } else {
+                        g2.setColor(Theme.SLATE_MUTED);
+                        // Simple Cog vector (circle + notches)
+                        g2.drawOval(w/2 - 7, h/2 - 7, 14, 14);
+                        g2.drawOval(w/2 - 3, h/2 - 3, 6, 6);
+                        for (int angle = 0; angle < 360; angle += 45) {
+                            double rad = Math.toRadians(angle);
+                            int x1 = (int)(w/2 + 7 * Math.cos(rad));
+                            int y1 = (int)(h/2 + 7 * Math.sin(rad));
+                            int x2 = (int)(w/2 + 10 * Math.cos(rad));
+                            int y2 = (int)(h/2 + 10 * Math.sin(rad));
+                            g2.drawLine(x1, y1, x2, y2);
+                        }
+                    }
+                    g2.dispose();
+                }
+            };
+            iconPanel.setPreferredSize(new Dimension(36, 36));
+            iconPanel.setOpaque(false);
+
+            // 2. Right Text panel (Stacked Name + SKU)
+            JPanel textPanel = new JPanel();
+            textPanel.setOpaque(false);
+            textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+
+            JLabel nameLabel = new JLabel(item.getName());
+            nameLabel.setFont(FontLoader.getInterSemiBold(13f));
+            nameLabel.setForeground(Theme.FOREST_DEEP);
+
+            String sku = item.getSku() != null ? item.getSku() : "RAW-ITM-" + item.getId();
+            JLabel skuLabel = new JLabel("SKU: " + sku.toUpperCase());
+            skuLabel.setFont(FontLoader.getInter(10f, Font.PLAIN));
+            skuLabel.setForeground(Theme.SLATE_MUTED);
+
+            textPanel.add(nameLabel);
+            textPanel.add(Box.createVerticalStrut(2));
+            textPanel.add(skuLabel);
+
+            container.add(iconPanel, BorderLayout.WEST);
+            container.add(textPanel, BorderLayout.CENTER);
+
+            return container;
+        }
+    }
+
+    // --- Hero Banner Class ---
+    private static class HeroBannerPanel extends JPanel {
+        private final String imageUrl = "https://lh3.googleusercontent.com/aida-public/AB6AXuAH2W0HmgKCdcgjZ3TBguiGy2QJThteqAZ5bMWToTC-BkKMjC7cepybTWUR2MHStw0A2Q3MIAWM8OJ5oWybKDcegL38zj4T19_-RK2BDxFBjTRSso60_31xqElN-Ovc_g_gPP6f3drS3LBRko2ef5zVTBPyPpMS8qTLbU9Lkj2zwFUi02HrsBKTWmR1WzLy3udgqw-HVixlf6YZYWUIpISK7l3WStni1es4hfw8k244GuumvgRoaf-ipN2glkm98576XD_pwPmPTd09";
+        
+        public HeroBannerPanel() {
+            setPreferredSize(new Dimension(800, 220));
+            setLayout(new BorderLayout());
+            setBorder(new EmptyBorder(32, 40, 32, 40));
+            
+            JPanel textPanel = new JPanel();
+            textPanel.setOpaque(false);
+            textPanel.setLayout(new BoxLayout(textPanel, BoxLayout.Y_AXIS));
+            
+            JLabel breadcrumb = new JLabel("DASHBOARD  >  ITEMS LIBRARY");
+            breadcrumb.setFont(FontLoader.getInterSemiBold(10f));
+            breadcrumb.setForeground(new Color(255, 255, 255, 160));
+            
+            JLabel title = new JLabel("Items Library");
+            title.setFont(FontLoader.getMerriweather(28f, Font.BOLD));
+            title.setForeground(Color.WHITE);
+            title.setBorder(new EmptyBorder(6, 0, 6, 0));
+            
+            JLabel subtitle = new JLabel("<html><body style='width: 540px;'>Manage your comprehensive catalog of raw botanical ingredients and processed organic formulas. Maintain precision in your inventory levels to ensure production excellence.</body></html>");
+            subtitle.setFont(FontLoader.getInter(13f, Font.PLAIN));
+            subtitle.setForeground(new Color(255, 255, 255, 210));
+            
+            textPanel.add(breadcrumb);
+            textPanel.add(title);
+            textPanel.add(subtitle);
+            
+            add(textPanel, BorderLayout.WEST);
+        }
+        
+        @Override
+        protected void paintComponent(Graphics g) {
+            super.paintComponent(g);
+            ImageIcon icon = ImageLoader.getOrLoadImage("items_hero_banner", imageUrl, this, getWidth(), getHeight());
+            if (icon != null) {
+                g.drawImage(icon.getImage(), 0, 0, getWidth(), getHeight(), null);
+            }
+            
+            Graphics2D g2 = (Graphics2D) g.create();
+            g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+            
+            // Linear gradient overlay from forest-deep green (85% opacity) to light alpha
+            Color startColor = new Color(26, 60, 52, 220); // forest-deep green
+            Color endColor = new Color(26, 60, 52, 70);
+            
+            LinearGradientPaint lgp = new LinearGradientPaint(
+                new Point2D.Float(0, 0),
+                new Point2D.Float(getWidth() * 0.75f, 0),
+                new float[]{0.0f, 1.0f},
+                new Color[]{startColor, endColor}
+            );
+            g2.setPaint(lgp);
+            g2.fillRect(0, 0, getWidth(), getHeight());
+            g2.dispose();
+        }
+    }
+
+    // --- Helper Action Buttons Renderer and Editor class ---
     private class ActionButtonsRendererEditor extends AbstractCellEditor implements TableCellEditor, javax.swing.table.TableCellRenderer {
         private final ActionPanel panel = new ActionPanel();
         private Item currentItem;
@@ -304,7 +530,7 @@ public class ItemsPage extends Page {
 
         private class ActionPanel extends JPanel {
             public ActionPanel() {
-                setLayout(new FlowLayout(FlowLayout.CENTER, 8, 8));
+                setLayout(new FlowLayout(FlowLayout.CENTER, 8, 14));
                 setOpaque(true);
 
                 JButton editBtn = new JButton("Edit");
