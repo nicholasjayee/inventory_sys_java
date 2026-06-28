@@ -52,12 +52,12 @@ def main():
 
         # 2. Mockup raw items list
         mock_items = [
-            ("Unrefined Shea Butter", "Raw Items", "RAW-SB-001", 50, "Ghana", 250, 4.50, "In Stock"),
-            ("Pure Lavender Essential Oil", "Raw Items", "RAW-LO-012", 15, "France", 8, 45.00, "Low Stock"),
-            ("Organic Rosehip Seeds", "Raw Items", "RAW-RS-044", 20, "Chile", 85, 12.50, "In Stock"),
-            ("Raw Argan Kernels", "Raw Items", "RAW-AK-089", 15, "Morocco", 120, 18.00, "In Stock"),
-            ("Atlantic Kelp (Dried)", "Raw Items", "RAW-AK-023", 30, "Iceland", 45, 9.50, "In Stock"),
-            ("Yellow Beeswax Pellets", "Raw Items", "RAW-BP-007", 25, "USA", 300, 6.00, "In Stock")
+            ("Organic Macadamia Nut Oil", "Raw Items", "RAW-MO-001", 50, "Kenya", 250, 450.00, "In Stock"),
+            ("Pure Eucalyptus Essential Oil", "Raw Items", "RAW-EO-012", 15, "Kenya", 8, 2500.00, "Low Stock"),
+            ("Raw Baobab Fruit Powder", "Raw Items", "RAW-BP-044", 20, "Kenya", 85, 1250.00, "In Stock"),
+            ("Moringa Oleifera Seeds", "Raw Items", "RAW-MS-089", 15, "Kenya", 120, 800.00, "In Stock"),
+            ("Unrefined Shea Butter", "Raw Items", "RAW-SB-023", 30, "Uganda", 45, 950.00, "In Stock"),
+            ("Yellow Beeswax Pellets", "Raw Items", "RAW-BP-007", 25, "Tanzania", 300, 600.00, "In Stock")
         ]
 
         # 3. Seed items
