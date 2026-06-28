@@ -1,8 +1,10 @@
 package com.inventory.app;
 
 import com.formdev.flatlaf.FlatLightLaf;
+import com.inventory.components.AppLayout;
 import com.inventory.components.FontLoader;
 import com.inventory.components.Sidebar;
+import com.inventory.components.TopNav;
 import com.inventory.db.DatabaseManager;
 import com.inventory.middleware.AuthMiddleware;
 import com.inventory.middleware.LoggingMiddleware;
@@ -10,8 +12,6 @@ import com.inventory.pages.dashboard.DashboardPage;
 import com.inventory.pages.items.ItemsPage;
 import com.inventory.pages.login.LoginPage;
 import com.inventory.router.Router;
-import com.inventory.components.AppLayout;
-import com.inventory.components.TopNav;
 import java.awt.CardLayout;
 import java.awt.Dimension;
 import javax.swing.JFrame;
@@ -41,12 +41,12 @@ public class Main {
             frame.setMinimumSize(new Dimension(1000, 650));
             frame.setLocationRelativeTo(null);
 
-            // Root panel managed by CardLayout for swapping layout wrappers
+            // Root panel (serves the entire app) - swaps between full login and main layout
             CardLayout rootLayout = new CardLayout();
             JPanel rootPanel = new JPanel(rootLayout);
             frame.add(rootPanel);
 
-            // Inner content panel managed by CardLayout router (the page outlet)
+            // Inner content panel managed by Router (serves as the page outlet)
             JPanel contentContainer = new JPanel();
 
             // Initialize Router on the inner content panel
@@ -56,28 +56,35 @@ public class Main {
             Sidebar sidebar = new Sidebar(router);
             TopNav topNav = new TopNav(router);
 
-            // Wrap them into AppLayout
+            // AppLayout (serves other pages - wraps Sidebar, TopNav, and content outlet)
             AppLayout appLayout = new AppLayout(sidebar, topNav, contentContainer);
 
-            // Register main screen wrappers in root CardPanel
+            // Initialize LoginPage (mounted ONLY to the root panel to avoid double-parenting)
             LoginPage loginPage = new LoginPage(router);
-            rootPanel.add(loginPage, "/login-screen");
-            rootPanel.add(appLayout, "/app-screen");
 
-            // Register routes (Pages) in Router
-            router.register("/login", loginPage);
+            // Register top-level layout panels
+            rootPanel.add(loginPage, "auth-layout");     // Fullscreen login (no sidebar or topnav)
+            rootPanel.add(appLayout, "dashboard-layout"); // Layout with sidebar and topnav
+
+            // Register routes in Router
+            router.register("/login", new com.inventory.router.Page() {
+                @Override
+                public void onPageLoad() {}
+            }); 
             router.register("/dashboard", new DashboardPage(router));
             router.register("/items", new ItemsPage(router));
 
             // Register global Middleware chain (order matters)
             router.addGlobalMiddleware(new LoggingMiddleware());
             
-            // Layout toggler middleware: swaps screens and updates sidebar/top-nav
+            // Layout switcher middleware: toggles top-level layouts and highlights active links
             router.addGlobalMiddleware((current, target, r) -> {
                 if ("/login".equals(target)) {
-                    rootLayout.show(rootPanel, "/login-screen");
+                    // Show fullscreen login screen
+                    rootLayout.show(rootPanel, "auth-layout");
                 } else {
-                    rootLayout.show(rootPanel, "/app-screen");
+                    // Show dashboard layout and sync header/sidebar active states
+                    rootLayout.show(rootPanel, "dashboard-layout");
                     topNav.setPageTitle(target);
                     sidebar.setActiveRoute(target);
                 }
