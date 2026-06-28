@@ -45,6 +45,9 @@ public class Main {
             frame.setSize(1200, 750);
             frame.setMinimumSize(new Dimension(1000, 650));
             frame.setLocationRelativeTo(null);
+            
+            // Set the custom Application Icon (Transparent PNG)
+            frame.setIconImage(new javax.swing.ImageIcon("assets/icons/app_icon.png").getImage());
 
             // Root panel (serves the entire app) - swaps between full login and main layout
             CardLayout rootLayout = new CardLayout();
