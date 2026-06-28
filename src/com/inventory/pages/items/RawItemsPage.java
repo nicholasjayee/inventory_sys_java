@@ -107,6 +107,30 @@ public class RawItemsPage extends Page {
         textPanel.add(descLabel);
         headerPanel.add(textPanel, BorderLayout.CENTER);
 
+        // Right Actions (New Item + Log PO)
+        JPanel actionsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 12, 0));
+        actionsPanel.setOpaque(false);
+        
+        JButton addItemBtn = new JButton("+ New Item");
+        Theme.styleSecondaryButton(addItemBtn);
+        addItemBtn.setPreferredSize(new Dimension(120, 36));
+        addItemBtn.addActionListener(e -> showAddItemDialog());
+
+        JButton logPoBtn = new JButton("Log PO");
+        Theme.stylePrimaryButton(logPoBtn);
+        logPoBtn.setPreferredSize(new Dimension(100, 36));
+        logPoBtn.addActionListener(e -> showLogPODialog());
+
+        actionsPanel.add(addItemBtn);
+        actionsPanel.add(logPoBtn);
+        
+        // Wrap actionsPanel to push it down slightly to align with title
+        JPanel actionsWrapper = new JPanel(new BorderLayout());
+        actionsWrapper.setOpaque(false);
+        actionsWrapper.setBorder(new EmptyBorder(16, 0, 0, 0));
+        actionsWrapper.add(actionsPanel, BorderLayout.CENTER);
+        headerPanel.add(actionsWrapper, BorderLayout.EAST);
+
         // 2. Metrics Quick Stats
         JPanel metricsPanel = new JPanel(new GridLayout(1, 3, 24, 0));
         metricsPanel.setOpaque(false);
@@ -227,6 +251,23 @@ public class RawItemsPage extends Page {
         }
     }
 
+    private void showLogPODialog() {
+        Frame topFrame = (Frame) SwingUtilities.getWindowAncestor(this);
+        com.inventory.components.PODialog dialog = new com.inventory.components.PODialog(topFrame);
+        dialog.setVisible(true);
+
+        if (dialog.isSucceeded() && dialog.getPurchaseOrder() != null) {
+            new Thread(() -> {
+                com.inventory.services.POService poService = new com.inventory.services.POService();
+                boolean added = poService.addOrder(dialog.getPurchaseOrder());
+                if (added) {
+                    System.out.println("Logged PO successfully.");
+                    loadRawItems(); // Refresh the page to update the metric!
+                }
+            }).start();
+        }
+    }
+
     @Override
     public void onPageLoad() {
         new Thread(this::loadRawItems).start();
@@ -258,13 +299,10 @@ public class RawItemsPage extends Page {
         // Metrics calculations
         int totalRawSku = rawItems.size();
         int lowStockCount = 0;
-        int pendingCount = 0;
+        int pendingCount = new com.inventory.services.POService().getPendingArrivalsCount();
         for (Item item : rawItems) {
             if ("Low Stock".equalsIgnoreCase(item.getStatus()) || "Out of Stock".equalsIgnoreCase(item.getStatus())) {
                 lowStockCount++;
-            }
-            if ("Out of Stock".equalsIgnoreCase(item.getStatus())) {
-                pendingCount++;
             }
         }
 
