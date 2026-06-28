@@ -84,13 +84,11 @@ public class DashboardHeader extends JPanel {
         Theme.stylePrimaryButton(createBtn);
         createBtn.setPreferredSize(new Dimension(160, 38));
         
-        // Load plus icon
         try {
-            ImageIcon plusIcon = new ImageIcon("assets/icons/close.png"); // We have multiply, but we can rotate or load a plus!
-            // Wait, we can load a plus icon or just paint/text draw. Let's see if we have close.png.
-            // If we don't have plus, we can download a plus icon or use the '+' character which is clean.
-            // Let's download a plus icon for completeness, or just use the '+' text. Let's use '+' text which is styled.
-            createBtn.setText("+ Create New Item");
+            ImageIcon plusIcon = new ImageIcon("assets/icons/plus.png");
+            Image scaledPlus = plusIcon.getImage().getScaledInstance(12, 12, Image.SCALE_SMOOTH);
+            createBtn.setIcon(new ImageIcon(scaledPlus));
+            createBtn.setIconTextGap(6);
         } catch (Exception e) {}
         
         createBtn.addActionListener(e -> onCreateItemClicked.run());

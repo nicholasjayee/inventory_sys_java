@@ -30,17 +30,26 @@ public class TopNav extends JPanel {
         setPreferredSize(new Dimension(800, 64)); // h-16
         setBackground(Theme.CREAM_BASE);
         setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Theme.BORDER_SUBTLE));
-        setLayout(new BorderLayout());
+        setLayout(new GridBagLayout());
         setBorder(BorderFactory.createCompoundBorder(
-            getBorder(),
+            BorderFactory.createMatteBorder(0, 0, 1, 0, Theme.BORDER_SUBTLE),
             new EmptyBorder(0, 24, 0, 24)
         ));
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.weighty = 1.0;
 
         // --- 1. Left branding ---
+        JPanel leftPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 22));
+        leftPanel.setOpaque(false);
         JLabel brandLabel = new JLabel("Aramweer Organic Skin Care");
         brandLabel.setFont(FontLoader.getMerriweather(16f, Font.BOLD));
         brandLabel.setForeground(Theme.FOREST_DEEP);
-        add(brandLabel, BorderLayout.WEST);
+        leftPanel.add(brandLabel);
+        
+        gbc.gridx = 0; gbc.weightx = 1.0; gbc.anchor = GridBagConstraints.WEST;
+        add(leftPanel, gbc);
 
         // --- 2. Center Nav Links (Home, Items, Inventory) ---
         JPanel centerPanel = new JPanel(new FlowLayout(FlowLayout.CENTER, 32, 14));
@@ -53,13 +62,15 @@ public class TopNav extends JPanel {
         centerPanel.add(homeBtn);
         centerPanel.add(itemsBtn);
         centerPanel.add(inventoryBtn);
-        add(centerPanel, BorderLayout.CENTER);
+        
+        gbc.gridx = 1; gbc.weightx = 0.0; gbc.anchor = GridBagConstraints.CENTER;
+        add(centerPanel, gbc);
 
         // --- 3. Right Actions (Search Pill + Sign out + Avatar) ---
-        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 12));
+        JPanel rightPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 16, 14));
         rightPanel.setOpaque(false);
 
-        // Search Pill Wrapper (w-64 equivalent)
+        // Search Wrapper (rounded-lg equivalent)
         JPanel searchPill = new JPanel(new BorderLayout(8, 0)) {
             @Override
             protected void paintComponent(Graphics g) {
@@ -67,14 +78,14 @@ public class TopNav extends JPanel {
                 Graphics2D g2 = (Graphics2D) g.create();
                 g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
                 g2.setColor(Theme.CREAM_SURFACE);
-                g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 32, 32);
+                g2.fillRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 8, 8); // rounded-lg
                 g2.setColor(Theme.BORDER_SUBTLE);
-                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 32, 32);
+                g2.drawRoundRect(0, 0, getWidth() - 1, getHeight() - 1, 8, 8); // rounded-lg
                 g2.dispose();
             }
         };
         searchPill.setOpaque(false);
-        searchPill.setPreferredSize(new Dimension(220, 36)); // Exact mockup width & height
+        searchPill.setPreferredSize(new Dimension(220, 34)); // Match mockup height
         searchPill.setBorder(new EmptyBorder(4, 12, 4, 12));
 
         // Load the downloaded search icon
@@ -147,7 +158,9 @@ public class TopNav extends JPanel {
         rightPanel.add(searchPill);
         rightPanel.add(signOutBtn);
         rightPanel.add(avatarPanel);
-        add(rightPanel, BorderLayout.EAST);
+        
+        gbc.gridx = 2; gbc.weightx = 1.0; gbc.anchor = GridBagConstraints.EAST;
+        add(rightPanel, gbc);
     }
 
     private JButton createNavLink(String text, String route) {

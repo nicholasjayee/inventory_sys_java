@@ -20,8 +20,8 @@ public class StatsBar extends JPanel {
         setPreferredSize(new Dimension(800, 90));
         setMaximumSize(new Dimension(Integer.MAX_VALUE, 90));
 
-        add(createStatsCard("RAW STOCK", rawStockVal = new JLabel("0 units"), "assets/icons/eco_active.png", Theme.SUCCESS_BG));
-        add(createStatsCard("PROCESSED GOODS", processedGoodsVal = new JLabel("0 units"), "assets/icons/cog_active.png", Theme.SUCCESS_BG));
+        add(createStatsCard("RAW STOCK", rawStockVal = new JLabel("0 units"), "assets/icons/box_active.png", Theme.SUCCESS_BG));
+        add(createStatsCard("PROCESSED GOODS", processedGoodsVal = new JLabel("0 units"), "assets/icons/science_active.png", Theme.SUCCESS_BG));
         add(createStatsCard("LOW STOCK ALERTS", lowStockAlertsVal = new JLabel("0 items"), "assets/icons/warning.png", Theme.ERROR_BG));
     }
 
